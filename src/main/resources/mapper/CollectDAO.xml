@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yyc.songshu.manager.dao.CollectDAO">
+  <resultMap id="BaseResultMap" type="com.yyc.songshu.manager.pojo.Collect">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="vid" jdbcType="INTEGER" property="vid" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="updated_at" jdbcType="INTEGER" property="updatedAt" />
+    <result column="created_at" jdbcType="INTEGER" property="createdAt" />
+    <association property="video" javaType="com.yyc.songshu.manager.pojo.Video">
+      <result column="id" jdbcType="INTEGER" property="id" />
+      <result column="title" jdbcType="VARCHAR" property="title" />
+      <result column="view_num" jdbcType="INTEGER" property="viewNum" />
+      <result column="like_num" jdbcType="INTEGER" property="likeNum" />
+      <result column="share_num" jdbcType="INTEGER" property="shareNum" />
+      <result column="comment_num" jdbcType="INTEGER" property="commentNum" />
+      <result column="collect_num" jdbcType="INTEGER" property="collectNum" />
+      <result column="status" jdbcType="BIT" property="status" />
+      <result column="thumb" jdbcType="VARCHAR" property="thumb" />
+      <result column="category_id" jdbcType="INTEGER" property="categoryId" />
+      <result column="created_at" jdbcType="INTEGER" property="createdAt" />
+      <result column="updated_at" jdbcType="INTEGER" property="updatedAt" />
+    </association>
+    <association property="users" javaType="com.yyc.songshu.manager.pojo.Users">
+      <result column="nickname" jdbcType="VARCHAR" property="nickname" />
+      <result column="avatar" jdbcType="VARCHAR" property="avatar" />
+      <result column="id" jdbcType="INTEGER" property="id" />
+    </association>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, user_id, vid, status, updated_at, created_at
+  </sql>
+  <!--是否收藏-->
+  <select id="selectIsCollect" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+    SELECT 1 FROM collect WHERE vid =  #{vId,jdbcType=INTEGER} AND user_id = #{userId,jdbcType=INTEGER}
+  </select>
+  <!--我的收藏-->
+  <select id="selectByUserCollect" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+   SELECT c.id,v.title,v.view_num,v.like_num,v.thumb,u.nickname,u.avatar,c.user_id,v.share_num,v.comment_num,v.status,v.category_id,v.created_at,v.updated_at,v.collect_num
+FROM collect c
+LEFT JOIN video v ON v.id=c.vid
+LEFT JOIN users u ON c.user_id=u.id
+where c.user_id = #{userId,jdbcType=INTEGER}
+limit #{page,jdbcType=INTEGER},#{limit,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from collect
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from collect
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yyc.songshu.manager.pojo.Collect">
+    insert into collect (id, user_id, vid, 
+      status, updated_at, created_at
+      )
+    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{vid,jdbcType=INTEGER}, 
+      #{status,jdbcType=INTEGER}, #{updatedAt,jdbcType=INTEGER}, #{createdAt,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.yyc.songshu.manager.pojo.Collect">
+    insert into collect
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="vid != null">
+        vid,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="updatedAt != null">
+        updated_at,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="createdAt != null">
+        created_at,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="vid != null">
+        #{vid,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="updatedAt != null">
+        #{updatedAt,jdbcType=INTEGER},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="createdAt != null">
+        #{createdAt,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yyc.songshu.manager.pojo.Collect">
+    update collect
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="vid != null">
+        vid = #{vid,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="updatedAt != null">
+        updated_at = #{updatedAt,jdbcType=INTEGER},
+      </if>
+      <if test="createdAt != null">
+        created_at = #{createdAt,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yyc.songshu.manager.pojo.Collect">
+    update collect
+    set user_id = #{userId,jdbcType=INTEGER},
+      vid = #{vid,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      updated_at = #{updatedAt,jdbcType=INTEGER},
+      created_at = #{createdAt,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

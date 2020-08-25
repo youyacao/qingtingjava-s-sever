@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yyc.songshu.manager.dao.RoleHasPermissionsDAO">
+  <resultMap id="BaseResultMap" type="com.yyc.songshu.manager.pojo.RoleHasPermissions">
+    <result column="permission_id" jdbcType="INTEGER" property="permissionId" />
+    <result column="role_id" jdbcType="INTEGER" property="roleId" />
+  </resultMap>
+  <insert id="insert" parameterType="com.yyc.songshu.manager.pojo.RoleHasPermissions">
+    insert into role_has_permissions (permission_id, role_id)
+    values (#{permissionId,jdbcType=INTEGER}, #{roleId,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yyc.songshu.manager.pojo.RoleHasPermissions">
+    insert into role_has_permissions
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="permissionId != null">
+        permission_id,
+      </if>
+      <if test="roleId != null">
+        role_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="permissionId != null">
+        #{permissionId,jdbcType=INTEGER},
+      </if>
+      <if test="roleId != null">
+        #{roleId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+</mapper>

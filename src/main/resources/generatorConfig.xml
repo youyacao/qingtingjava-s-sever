@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+    <context id="mysql" targetRuntime="Mybatis3">
+        <commentGenerator>
+            <property name="suppressDate" value="true"/>
+            <!-- 是否去除自动生成的注释 true：是 ： false:否 -->
+            <property name="suppressAllComments" value="true" />
+        </commentGenerator>
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://122.114.195.108:3306/songshu"
+                        userId="root" password="password">
+        </jdbcConnection>
+        <!--存放生成实体类的路径-->
+        <javaModelGenerator targetPackage="com.yyc.songshu.manager.pojo" targetProject="src/main/java"/>
+        <!--生成sql映射文件的路径-->
+        <sqlMapGenerator targetPackage="mapper" targetProject="src/main/resources"/>
+        <!--生成dao接口的目录-->
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.yyc.songshu.manager.dao" targetProject="src/main/java"/>
+
+     <!--   <table tableName="admin_log" mapperName="AdminLogDAO" domainObjectName="AdminLog"
+               enableDeleteByExample="false"
+               enableUpdateByExample="false"
+               enableSelectByExample="false"
+               enableCountByExample="false"
+               selectByExampleQueryId="false"></table>
+        <table tableName="advert" mapperName="AdvertDAO" domainObjectName="Advert"
+               enableDeleteByExample="false"
+               enableUpdateByExample="false"
+               enableSelectByExample="false"
+               enableCountByExample="false"
+               selectByExampleQueryId="false"></table>
+        <table tableName="advert_view" mapperName="AdvertViewDAO" domainObjectName="AdvertView"
+               enableDeleteByExample="false"
+               enableUpdateByExample="false"
+               enableSelectByExample="false"
+               enableCountByExample="false"
+               selectByExampleQueryId="false"></table>
+        <table tableName="article" mapperName="ArticleDAO" domainObjectName="Article"
+               enableDeleteByExample="false"
+               enableUpdateByExample="false"
+               enableSelectByExample="false"
+               enableCountByExample="false"
+               selectByExampleQueryId="false"></table>
+        <table tableName="article_view" mapperName="ArticleViewDAO" domainObjectName="ArticleView"
+               enableDeleteByExample="false"
+               enableUpdateByExample="false"
+               enableSelectByExample="false"
+               enableCountByExample="false"
+               selectByExampleQueryId="false"></table>
+        <table tableName="category" mapperName="CategoryDAO" domainObjectName="Category"
+               enableDeleteByExample="false"
+               enableUpdateByExample="false"
+               enableSelectByExample="false"
+               enableCountByExample="false"
+               selectByExampleQueryId="false"></table>
+        <table tableName="collect" mapperName="CollectDAO" domainObjectName="Collect"
+               enableDeleteByExample="false"
+               enableUpdateByExample="false"
+               enableSelectByExample="false"
+               enableCountByExample="false"
+               selectByExampleQueryId="false"></table>
+        <table tableName="comment" mapperName="CommentDAO" domainObjectName="Comment"
+               enableDeleteByExample="false"
+               enableUpdateByExample="false"
+               enableSelectByExample="false"
+               enableCountByExample="false"
+               selectByExampleQueryId="false"></table>
+        <table tableName="comment_like" mapperName="CommentLikeDAO" domainObjectName="CommentLike"
+               enableDeleteByExample="false"
+               enableUpdateByExample="false"
+               enableSelectByExample="false"
+               enableCountByExample="false"
+               selectByExampleQueryId="false"></table>
+        <table tableName="config" mapperName="ConfigDAO" domainObjectName="Config"
+               enableDeleteByExample="false"
+               enableUpdateByExample="false"
+               enableSelectByExample="false"
+               enableCountByExample="false"
+               selectByExampleQueryId="false"></table>
+        <table tableName="download" mapperName="DownloadDAO" domainObjectName="Download"
+               enableDeleteByExample="false"
+               enableUpdateByExample="false"
+               enableSelectByExample="false"
+               enableCountByExample="false"
+               selectByExampleQueryId="false"></table>
+        <table tableName="follow" mapperName="FollowDAO" domainObjectName="Follow"
+               enableDeleteByExample="false"
+               enableUpdateByExample="false"
+               enableSelectByExample="false"
+               enableCountByExample="false"
+               selectByExampleQueryId="false"></table>
+        <table tableName="like" mapperName="LikeDAO" domainObjectName="Like"
+               enableDeleteByExample="false"
+               enableUpdateByExample="false"
+               enableSelectByExample="false"
+               enableCountByExample="false"
+               selectByExampleQueryId="false"></table>-->
+        <!--<table tableName="permissions" mapperName="PermissionsDAO" domainObjectName="Permissions"
+               enableDeleteByExample="false"
+               enableUpdateByExample="false"
+               enableSelectByExample="false"
+               enableCountByExample="false"
+               selectByExampleQueryId="false"></table>
+        <table tableName="recharge" mapperName="RechargeDAO" domainObjectName="Recharge"
+               enableDeleteByExample="false"
+               enableUpdateByExample="false"
+               enableSelectByExample="false"
+               enableCountByExample="false"
+               selectByExampleQueryId="false"></table>
+        <table tableName="role_has_permissions" mapperName="RoleHasPermissionsDAO" domainObjectName="RoleHasPermissions"
+               enableDeleteByExample="false"
+               enableUpdateByExample="false"
+               enableSelectByExample="false"
+               enableCountByExample="false"
+               selectByExampleQueryId="false"></table>
+        <table tableName="user_vip_shop" mapperName="UserVipShopDAO" domainObjectName="UserVipShop"
+               enableDeleteByExample="false"
+               enableUpdateByExample="false"
+               enableSelectByExample="false"
+               enableCountByExample="false"
+               selectByExampleQueryId="false"></table>-->
+       <!-- <table tableName="roles" mapperName="RolesDAO" domainObjectName="Roles"
+               enableDeleteByExample="false"
+               enableUpdateByExample="false"
+               enableSelectByExample="false"
+               enableCountByExample="false"
+               selectByExampleQueryId="false"></table>
+        <table tableName="search_log" mapperName="SearchLogDAO" domainObjectName="SearchLog"
+               enableDeleteByExample="false"
+               enableUpdateByExample="false"
+               enableSelectByExample="false"
+               enableCountByExample="false"
+               selectByExampleQueryId="false"></table>
+        <table tableName="share" mapperName="ShareDAO" domainObjectName="Share"
+               enableDeleteByExample="false"
+               enableUpdateByExample="false"
+               enableSelectByExample="false"
+               enableCountByExample="false"
+               selectByExampleQueryId="false"></table>
+        <table tableName="sms_log" mapperName="SmsLogDAO" domainObjectName="SmsLog"
+               enableDeleteByExample="false"
+               enableUpdateByExample="false"
+               enableSelectByExample="false"
+               enableCountByExample="false"
+               selectByExampleQueryId="false"></table>
+        <table tableName="user_account_log" mapperName="UserAccountLogDAO" domainObjectName="UserAccountLog"
+               enableDeleteByExample="false"
+               enableUpdateByExample="false"
+               enableSelectByExample="false"
+               enableCountByExample="false"
+               selectByExampleQueryId="false"></table>
+        <table tableName="user_has_roles" mapperName="UserHasRolesDAO" domainObjectName="UserHasRoles"
+               enableDeleteByExample="false"
+               enableUpdateByExample="false"
+               enableSelectByExample="false"
+               enableCountByExample="false"
+               selectByExampleQueryId="false"></table>
+        <table tableName="user_login_log" mapperName="UserLoginLogDAO" domainObjectName="UserLoginLog"
+               enableDeleteByExample="false"
+               enableUpdateByExample="false"
+               enableSelectByExample="false"
+               enableCountByExample="false"
+               selectByExampleQueryId="false"></table>
+        <table tableName="user_vip_log" mapperName="UserVipLogDAO" domainObjectName="UserVipLog"
+               enableDeleteByExample="false"
+               enableUpdateByExample="false"
+               enableSelectByExample="false"
+               enableCountByExample="false"
+               selectByExampleQueryId="false"></table>
+        <table tableName="user_withdraw_log" mapperName="UserWithdrawLogDAO" domainObjectName="UserWithdrawLog"
+               enableDeleteByExample="false"
+               enableUpdateByExample="false"
+               enableSelectByExample="false"
+               enableCountByExample="false"
+               selectByExampleQueryId="false"></table>
+        <table tableName="users" mapperName="UsersDAO" domainObjectName="Users"
+               enableDeleteByExample="false"
+               enableUpdateByExample="false"
+               enableSelectByExample="false"
+               enableCountByExample="false"
+               selectByExampleQueryId="false"></table>
+        <table tableName="video" mapperName="VideoDAO" domainObjectName="Video"
+               enableDeleteByExample="false"
+               enableUpdateByExample="false"
+               enableSelectByExample="false"
+               enableCountByExample="false"
+               selectByExampleQueryId="false"></table>
+        <table tableName="video_view" mapperName="VideoViewDAO" domainObjectName="VideoView"
+               enableDeleteByExample="false"
+               enableUpdateByExample="false"
+               enableSelectByExample="false"
+               enableCountByExample="false"
+               selectByExampleQueryId="false"></table>-->
+        <!--<table tableName="message" mapperName="MessageDAO" domainObjectName="Message"
+               enableDeleteByExample="false"
+               enableUpdateByExample="false"
+               enableSelectByExample="false"
+               enableCountByExample="false"
+               selectByExampleQueryId="false"></table>-->
+        <!--<table tableName="view" mapperName="ViewDAO" domainObjectName="View"
+               enableDeleteByExample="false"
+               enableUpdateByExample="false"
+               enableSelectByExample="false"
+               enableCountByExample="false"
+               selectByExampleQueryId="false"></table>
+        <table tableName="user_tags" mapperName="UserTagsDAO" domainObjectName="UserTags"
+               enableDeleteByExample="false"
+               enableUpdateByExample="false"
+               enableSelectByExample="false"
+               enableCountByExample="false"
+               selectByExampleQueryId="false"></table>
+        <table tableName="user_has_tags" mapperName="UserHasTagsDAO" domainObjectName="UserHasTags"
+               enableDeleteByExample="false"
+               enableUpdateByExample="false"
+               enableSelectByExample="false"
+               enableCountByExample="false"
+               selectByExampleQueryId="false"></table>
+        <table tableName="topic_relate" mapperName="TopicRelateDAO" domainObjectName="TopicRelate"
+               enableDeleteByExample="false"
+               enableUpdateByExample="false"
+               enableSelectByExample="false"
+               enableCountByExample="false"
+               selectByExampleQueryId="false"></table>
+        <table tableName="topic" mapperName="TopicDAO" domainObjectName="Topic"
+               enableDeleteByExample="false"
+               enableUpdateByExample="false"
+               enableSelectByExample="false"
+               enableCountByExample="false"
+               selectByExampleQueryId="false"></table>-->
+        <!--<table tableName="sms" mapperName="SmsDAO" domainObjectName="Sms"
+               enableDeleteByExample="false"
+               enableUpdateByExample="false"
+               enableSelectByExample="false"
+               enableCountByExample="false"
+               selectByExampleQueryId="false"></table>-->
+        <table tableName="app_content" mapperName="AppContentDao" domainObjectName="AppContent"
+               enableDeleteByExample="false"
+               enableUpdateByExample="false"
+               enableSelectByExample="false"
+               enableCountByExample="false"
+               selectByExampleQueryId="false"></table>
+    </context>
+</generatorConfiguration>

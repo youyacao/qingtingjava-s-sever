@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yyc.songshu.manager.dao.SmsDAO">
+  <resultMap id="BaseResultMap" type="com.yyc.songshu.manager.pojo.Sms">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="sname" jdbcType="VARCHAR" property="sname" />
+    <result column="template_code" jdbcType="VARCHAR" property="templateCode" />
+    <result column="access_key_id" jdbcType="VARCHAR" property="accessKeyId" />
+    <result column="secret" jdbcType="VARCHAR" property="secret" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, sname, template_code, access_key_id, secret, type
+  </sql>
+  <!--查询数据-->
+  <select id="selectByType" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from sms
+    where type = #{type,jdbcType=VARCHAR}
+  </select>
+  <!--修改短信配置-->
+  <update id="updateByType" parameterType="com.yyc.songshu.manager.pojo.Sms">
+    update sms
+    <set>
+      <if test="sname != null">
+        sname = #{sname,jdbcType=VARCHAR},
+      </if>
+      <if test="templateCode != null">
+        template_code = #{templateCode,jdbcType=VARCHAR},
+      </if>
+      <if test="accessKeyId != null">
+        access_key_id = #{accessKeyId,jdbcType=VARCHAR},
+      </if>
+      <if test="secret != null">
+        secret = #{secret,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where type = #{type,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sms
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from sms
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yyc.songshu.manager.pojo.Sms">
+    insert into sms (id, sname, template_code, 
+      access_key_id, secret, type
+      )
+    values (#{id,jdbcType=INTEGER}, #{sname,jdbcType=VARCHAR}, #{templateCode,jdbcType=VARCHAR}, 
+      #{accessKeyId,jdbcType=VARCHAR}, #{secret,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.yyc.songshu.manager.pojo.Sms">
+    insert into sms
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="sname != null">
+        sname,
+      </if>
+      <if test="templateCode != null">
+        template_code,
+      </if>
+      <if test="accessKeyId != null">
+        access_key_id,
+      </if>
+      <if test="secret != null">
+        secret,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="sname != null">
+        #{sname,jdbcType=VARCHAR},
+      </if>
+      <if test="templateCode != null">
+        #{templateCode,jdbcType=VARCHAR},
+      </if>
+      <if test="accessKeyId != null">
+        #{accessKeyId,jdbcType=VARCHAR},
+      </if>
+      <if test="secret != null">
+        #{secret,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yyc.songshu.manager.pojo.Sms">
+    update sms
+    <set>
+      <if test="sname != null">
+        sname = #{sname,jdbcType=VARCHAR},
+      </if>
+      <if test="templateCode != null">
+        template_code = #{templateCode,jdbcType=VARCHAR},
+      </if>
+      <if test="accessKeyId != null">
+        access_key_id = #{accessKeyId,jdbcType=VARCHAR},
+      </if>
+      <if test="secret != null">
+        secret = #{secret,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yyc.songshu.manager.pojo.Sms">
+    update sms
+    set sname = #{sname,jdbcType=VARCHAR},
+      template_code = #{templateCode,jdbcType=VARCHAR},
+      access_key_id = #{accessKeyId,jdbcType=VARCHAR},
+      secret = #{secret,jdbcType=VARCHAR},
+      type = #{type,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

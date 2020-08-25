@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yyc.songshu.manager.dao.VideoDAO">
+  <resultMap id="BaseResultMap" type="com.yyc.songshu.manager.pojo.Video">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="category_id" jdbcType="INTEGER" property="categoryId" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="thumb" jdbcType="VARCHAR" property="thumb" />
+    <result column="video_url" jdbcType="VARCHAR" property="videoUrl" />
+    <result column="view_num" jdbcType="INTEGER" property="viewNum" />
+    <result column="like_num" jdbcType="INTEGER" property="likeNum" />
+    <result column="comment_num" jdbcType="INTEGER" property="commentNum" />
+    <result column="collect_num" jdbcType="INTEGER" property="collectNum" />
+    <result column="share_num" jdbcType="INTEGER" property="shareNum" />
+    <result column="tags" jdbcType="VARCHAR" property="tags" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="updated_at" jdbcType="INTEGER" property="updatedAt" />
+    <result column="created_at" jdbcType="INTEGER" property="createdAt" />
+    <association property="users" javaType="com.yyc.songshu.manager.pojo.Users">
+      <result column="nickname" jdbcType="VARCHAR" property="nickname" />
+      <result column="avatar" jdbcType="VARCHAR" property="avatar" />
+      <result column="id" jdbcType="INTEGER" property="id" />
+      <result column="phone" jdbcType="VARCHAR" property="phone" />
+    </association>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, user_id, category_id, title, thumb, video_url, view_num, like_num, comment_num, 
+    share_num, tags, status, updated_at, created_at
+  </sql>
+  <!--获取所有Id-->
+  <select id="selectAllId" resultType="java.lang.Integer">
+    select id from video
+  </select>
+  <!--点赞数-->
+  <update id="likeOffVideoById" parameterType="java.lang.Integer">
+    update video set like_num=like_num-1 where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="likeOnVideoById" parameterType="java.lang.Integer">
+    update video set like_num=like_num+1 where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!--评论数-->
+  <update id="addVideoCommentById" parameterType="java.lang.Integer">
+    update video set comment_num=comment_num+1 where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!--收藏数-->
+  <update id="addCollectById" parameterType="java.lang.Integer">
+    update video set collect_num=collect_num+1 where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!--查询播放页-->
+  <select id="selectVideoByIdOrMixIdMinId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    SELECT
+    v.title,v.view_num,v.like_num,v.thumb,v.video_url,v.created_at,v.user_id,v.id,v.comment_num,
+u.username,v.updated_at,u.nickname,u.avatar,v.category_id,v.share_num,v.collect_num,
+    FROM video v
+    LEFT JOIN users u ON u.id = v.user_id
+    WHERE  v.id = #{id,jdbcType=INTEGER}
+  </select>
+  <!--关键词查询-->
+  <select id="selectVideoAndUsersByKeyWord" resultMap="BaseResultMap">
+     SELECT v.title,v.view_num,v.like_num,v.thumb,v.video_url,v.created_at,v.user_id,v.id,
+u.username,v.updated_at,u.nickname,u.avatar,v.category_id,v.comment_num,v.share_num,v.collect_num
+FROM video v
+LEFT JOIN users u ON u.id = v.user_id
+where v.title like CONCAT('%',#{title,jdbcType=VARCHAR},'%')
+ORDER BY v.updated_at DESC limit #{page,jdbcType=INTEGER},#{limit,jdbcType=INTEGER}
+  </select>
+  <select id="selectAllVideo" resultMap="BaseResultMap" >
+   SELECT  v.title,v.view_num,v.like_num,v.thumb,v.video_url,v.created_at,v.user_id,v.id,
+u.username,v.updated_at,u.nickname,u.avatar,v.category_id,v.comment_num,v.share_num,u.phone,v.collect_num,v.status
+FROM video v
+LEFT JOIN users u ON u.id = v.user_id
+  </select>
+  <!--获取最新视频-->
+  <select id="selectNewestVideo" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    SELECT v.title,v.view_num,v.like_num,v.thumb,v.video_url,v.created_at,v.user_id,v.id,
+u.username,v.updated_at,u.nickname,u.avatar,v.category_id,v.comment_num,v.share_num,v.collect_num
+FROM video v
+LEFT JOIN users u ON u.id = v.user_id
+order by v.updated_at DESC limit #{page,jdbcType=INTEGER},#{limit,jdbcType=INTEGER}
+  </select>
+  <!--获取总数-->
+  <select id="selectCount" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+    SELECT COUNT(id) FROM video ORDER BY updated_at DESC
+  </select>
+  <select id="selectVideoInfoById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    SELECT v.title,v.view_num,v.like_num,v.thumb,v.video_url,v.created_at,v.user_id,v.id,
+u.username,v.updated_at,u.nickname,u.avatar,v.category_id,v.comment_num,v.share_num,v.collect_num
+FROM video v
+LEFT JOIN users u ON u.id = v.user_id
+where  v.id = #{vid,jdbcType=INTEGER}
+  </select>
+  <!--根据分类获取视频-->
+  <select id="selectVideoByCategoryId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    SELECT v.title,v.view_num,v.like_num,v.thumb,v.video_url,v.created_at,v.user_id,v.id,
+u.username,v.updated_at,u.nickname,u.avatar,v.category_id,v.comment_num,v.share_num,v.collect_num
+FROM video v
+LEFT JOIN users u ON u.id = v.user_id
+where category_id = #{CategoryId,jdbcType=INTEGER}
+ORDER BY v.updated_at DESC limit #{page,jdbcType=INTEGER},#{limit,jdbcType=INTEGER}
+  </select>
+  <!--获取总数-->
+  <select id="selectCountByCid" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+    SELECT COUNT(id) FROM video WHERE category_id = #{cid,jdbcType=INTEGER}
+  </select>
+  <!--我的作品-->
+  <select id="selectMyVideo" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+ SELECT v.title,v.view_num,v.like_num,v.thumb,v.video_url,v.created_at,v.user_id,v.id,
+u.username,u.nickname,u.avatar,v.comment_num,v.share_num,v.collect_num
+FROM video v
+LEFT JOIN users u ON u.id = v.user_id limit #{page,jdbcType=INTEGER},#{limit,jdbcType=INTEGER}
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from video
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from video
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yyc.songshu.manager.pojo.Video">
+    insert into video (id, user_id, category_id, 
+      title, thumb, video_url, 
+      view_num, like_num, comment_num, 
+      share_num, tags, status, 
+      updated_at, created_at)
+    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{categoryId,jdbcType=INTEGER}, 
+      #{title,jdbcType=VARCHAR}, #{thumb,jdbcType=VARCHAR}, #{videoUrl,jdbcType=VARCHAR}, 
+      #{viewNum,jdbcType=INTEGER}, #{likeNum,jdbcType=INTEGER}, #{commentNum,jdbcType=INTEGER}, 
+      #{shareNum,jdbcType=INTEGER}, #{tags,jdbcType=VARCHAR}, #{status,jdbcType=BIT}, 
+      #{updatedAt,jdbcType=INTEGER}, #{createdAt,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yyc.songshu.manager.pojo.Video">
+    insert into video
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="categoryId != null">
+        category_id,
+      </if>
+      <if test="title != null">
+        title,
+      </if>
+      <if test="thumb != null">
+        thumb,
+      </if>
+      <if test="videoUrl != null">
+        video_url,
+      </if>
+      <if test="viewNum != null">
+        view_num,
+      </if>
+      <if test="likeNum != null">
+        like_num,
+      </if>
+      <if test="commentNum != null">
+        comment_num,
+      </if>
+      <if test="shareNum != null">
+        share_num,
+      </if>
+      <if test="tags != null">
+        tags,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="updatedAt != null">
+        updated_at,
+      </if>
+      <if test="createdAt != null">
+        created_at,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="categoryId != null">
+        #{categoryId,jdbcType=INTEGER},
+      </if>
+      <if test="title != null">
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="thumb != null">
+        #{thumb,jdbcType=VARCHAR},
+      </if>
+      <if test="videoUrl != null">
+        #{videoUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="viewNum != null">
+        #{viewNum,jdbcType=INTEGER},
+      </if>
+      <if test="likeNum != null">
+        #{likeNum,jdbcType=INTEGER},
+      </if>
+      <if test="commentNum != null">
+        #{commentNum,jdbcType=INTEGER},
+      </if>
+      <if test="shareNum != null">
+        #{shareNum,jdbcType=INTEGER},
+      </if>
+      <if test="tags != null">
+        #{tags,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=BIT},
+      </if>
+      <if test="updatedAt != null">
+        #{updatedAt,jdbcType=INTEGER},
+      </if>
+      <if test="createdAt != null">
+        #{createdAt,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yyc.songshu.manager.pojo.Video">
+    update video
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="categoryId != null">
+        category_id = #{categoryId,jdbcType=INTEGER},
+      </if>
+      <if test="title != null">
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="thumb != null">
+        thumb = #{thumb,jdbcType=VARCHAR},
+      </if>
+      <if test="videoUrl != null">
+        video_url = #{videoUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="viewNum != null">
+        view_num = #{viewNum,jdbcType=INTEGER},
+      </if>
+      <if test="likeNum != null">
+        like_num = #{likeNum,jdbcType=INTEGER},
+      </if>
+      <if test="commentNum != null">
+        comment_num = #{commentNum,jdbcType=INTEGER},
+      </if>
+      <if test="shareNum != null">
+        share_num = #{shareNum,jdbcType=INTEGER},
+      </if>
+      <if test="tags != null">
+        tags = #{tags,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=BIT},
+      </if>
+      <if test="updatedAt != null">
+        updated_at = #{updatedAt,jdbcType=INTEGER},
+      </if>
+      <if test="createdAt != null">
+        created_at = #{createdAt,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yyc.songshu.manager.pojo.Video">
+    update video
+    set user_id = #{userId,jdbcType=INTEGER},
+      category_id = #{categoryId,jdbcType=INTEGER},
+      title = #{title,jdbcType=VARCHAR},
+      thumb = #{thumb,jdbcType=VARCHAR},
+      video_url = #{videoUrl,jdbcType=VARCHAR},
+      view_num = #{viewNum,jdbcType=INTEGER},
+      like_num = #{likeNum,jdbcType=INTEGER},
+      comment_num = #{commentNum,jdbcType=INTEGER},
+      share_num = #{shareNum,jdbcType=INTEGER},
+      tags = #{tags,jdbcType=VARCHAR},
+      status = #{status,jdbcType=BIT},
+      updated_at = #{updatedAt,jdbcType=INTEGER},
+      created_at = #{createdAt,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yyc.songshu.manager.dao.UserLoginLogDAO">
+  <resultMap id="BaseResultMap" type="com.yyc.songshu.manager.pojo.UserLoginLog">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="login_type" jdbcType="BIT" property="loginType" />
+    <result column="ip" jdbcType="VARCHAR" property="ip" />
+    <result column="requests" jdbcType="VARCHAR" property="requests" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="status" jdbcType="BIT" property="status" />
+    <result column="updated_at" jdbcType="INTEGER" property="updatedAt" />
+    <result column="created_at" jdbcType="INTEGER" property="createdAt" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, username, login_type, ip, requests, remark, status, updated_at, created_at
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from user_login_log
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from user_login_log
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yyc.songshu.manager.pojo.UserLoginLog">
+    insert into user_login_log (id, username, login_type, 
+      ip, requests, remark, 
+      status, updated_at, created_at
+      )
+    values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{loginType,jdbcType=BIT}, 
+      #{ip,jdbcType=VARCHAR}, #{requests,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+      #{status,jdbcType=BIT}, #{updatedAt,jdbcType=INTEGER}, #{createdAt,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.yyc.songshu.manager.pojo.UserLoginLog">
+    insert into user_login_log
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="username != null">
+        username,
+      </if>
+      <if test="loginType != null">
+        login_type,
+      </if>
+      <if test="ip != null">
+        ip,
+      </if>
+      <if test="requests != null">
+        requests,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="updatedAt != null">
+        updated_at,
+      </if>
+      <if test="createdAt != null">
+        created_at,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="username != null">
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="loginType != null">
+        #{loginType,jdbcType=BIT},
+      </if>
+      <if test="ip != null">
+        #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="requests != null">
+        #{requests,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=BIT},
+      </if>
+      <if test="updatedAt != null">
+        #{updatedAt,jdbcType=INTEGER},
+      </if>
+      <if test="createdAt != null">
+        #{createdAt,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yyc.songshu.manager.pojo.UserLoginLog">
+    update user_login_log
+    <set>
+      <if test="username != null">
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="loginType != null">
+        login_type = #{loginType,jdbcType=BIT},
+      </if>
+      <if test="ip != null">
+        ip = #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="requests != null">
+        requests = #{requests,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=BIT},
+      </if>
+      <if test="updatedAt != null">
+        updated_at = #{updatedAt,jdbcType=INTEGER},
+      </if>
+      <if test="createdAt != null">
+        created_at = #{createdAt,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yyc.songshu.manager.pojo.UserLoginLog">
+    update user_login_log
+    set username = #{username,jdbcType=VARCHAR},
+      login_type = #{loginType,jdbcType=BIT},
+      ip = #{ip,jdbcType=VARCHAR},
+      requests = #{requests,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      status = #{status,jdbcType=BIT},
+      updated_at = #{updatedAt,jdbcType=INTEGER},
+      created_at = #{createdAt,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

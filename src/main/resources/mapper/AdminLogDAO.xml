@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yyc.songshu.manager.dao.AdminLogDAO">
+  <resultMap id="BaseResultMap" type="com.yyc.songshu.manager.pojo.AdminLog">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="code" jdbcType="INTEGER" property="code" />
+    <result column="msg" jdbcType="VARCHAR" property="msg" />
+    <result column="method" jdbcType="VARCHAR" property="method" />
+    <result column="action" jdbcType="VARCHAR" property="action" />
+    <result column="ip" jdbcType="VARCHAR" property="ip" />
+    <result column="updated_at" jdbcType="INTEGER" property="updatedAt" />
+    <result column="created_at" jdbcType="INTEGER" property="createdAt" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.yyc.songshu.manager.pojo.AdminLogWithBLOBs">
+    <result column="datas" jdbcType="LONGVARCHAR" property="datas" />
+    <result column="requests" jdbcType="LONGVARCHAR" property="requests" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, user_id, code, msg, method, action, ip, updated_at, created_at
+  </sql>
+  <sql id="Blob_Column_List">
+    datas, requests
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from admin_log
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from admin_log
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yyc.songshu.manager.pojo.AdminLogWithBLOBs">
+    insert into admin_log (id, user_id, code, 
+      msg, method, action, 
+      ip, updated_at, created_at, 
+      datas, requests)
+    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{code,jdbcType=INTEGER}, 
+      #{msg,jdbcType=VARCHAR}, #{method,jdbcType=VARCHAR}, #{action,jdbcType=VARCHAR}, 
+      #{ip,jdbcType=VARCHAR}, #{updatedAt,jdbcType=INTEGER}, #{createdAt,jdbcType=INTEGER}, 
+      #{datas,jdbcType=LONGVARCHAR}, #{requests,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yyc.songshu.manager.pojo.AdminLogWithBLOBs">
+    insert into admin_log
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="code != null">
+        code,
+      </if>
+      <if test="msg != null">
+        msg,
+      </if>
+      <if test="method != null">
+        method,
+      </if>
+      <if test="action != null">
+        action,
+      </if>
+      <if test="ip != null">
+        ip,
+      </if>
+      <if test="updatedAt != null">
+        updated_at,
+      </if>
+      <if test="createdAt != null">
+        created_at,
+      </if>
+      <if test="datas != null">
+        datas,
+      </if>
+      <if test="requests != null">
+        requests,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="code != null">
+        #{code,jdbcType=INTEGER},
+      </if>
+      <if test="msg != null">
+        #{msg,jdbcType=VARCHAR},
+      </if>
+      <if test="method != null">
+        #{method,jdbcType=VARCHAR},
+      </if>
+      <if test="action != null">
+        #{action,jdbcType=VARCHAR},
+      </if>
+      <if test="ip != null">
+        #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="updatedAt != null">
+        #{updatedAt,jdbcType=INTEGER},
+      </if>
+      <if test="createdAt != null">
+        #{createdAt,jdbcType=INTEGER},
+      </if>
+      <if test="datas != null">
+        #{datas,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="requests != null">
+        #{requests,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yyc.songshu.manager.pojo.AdminLogWithBLOBs">
+    update admin_log
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="code != null">
+        code = #{code,jdbcType=INTEGER},
+      </if>
+      <if test="msg != null">
+        msg = #{msg,jdbcType=VARCHAR},
+      </if>
+      <if test="method != null">
+        method = #{method,jdbcType=VARCHAR},
+      </if>
+      <if test="action != null">
+        action = #{action,jdbcType=VARCHAR},
+      </if>
+      <if test="ip != null">
+        ip = #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="updatedAt != null">
+        updated_at = #{updatedAt,jdbcType=INTEGER},
+      </if>
+      <if test="createdAt != null">
+        created_at = #{createdAt,jdbcType=INTEGER},
+      </if>
+      <if test="datas != null">
+        datas = #{datas,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="requests != null">
+        requests = #{requests,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.yyc.songshu.manager.pojo.AdminLogWithBLOBs">
+    update admin_log
+    set user_id = #{userId,jdbcType=INTEGER},
+      code = #{code,jdbcType=INTEGER},
+      msg = #{msg,jdbcType=VARCHAR},
+      method = #{method,jdbcType=VARCHAR},
+      action = #{action,jdbcType=VARCHAR},
+      ip = #{ip,jdbcType=VARCHAR},
+      updated_at = #{updatedAt,jdbcType=INTEGER},
+      created_at = #{createdAt,jdbcType=INTEGER},
+      datas = #{datas,jdbcType=LONGVARCHAR},
+      requests = #{requests,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yyc.songshu.manager.pojo.AdminLog">
+    update admin_log
+    set user_id = #{userId,jdbcType=INTEGER},
+      code = #{code,jdbcType=INTEGER},
+      msg = #{msg,jdbcType=VARCHAR},
+      method = #{method,jdbcType=VARCHAR},
+      action = #{action,jdbcType=VARCHAR},
+      ip = #{ip,jdbcType=VARCHAR},
+      updated_at = #{updatedAt,jdbcType=INTEGER},
+      created_at = #{createdAt,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

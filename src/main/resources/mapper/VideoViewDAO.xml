@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yyc.songshu.manager.dao.VideoViewDAO">
+  <resultMap id="BaseResultMap" type="com.yyc.songshu.manager.pojo.VideoView">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="vid" jdbcType="INTEGER" property="vid" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="status" jdbcType="BIT" property="status" />
+    <result column="updated_at" jdbcType="INTEGER" property="updatedAt" />
+    <result column="created_at" jdbcType="INTEGER" property="createdAt" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, vid, user_id, remark, status, updated_at, created_at
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from video_view
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from video_view
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yyc.songshu.manager.pojo.VideoView">
+    insert into video_view (id, vid, user_id, 
+      remark, status, updated_at, 
+      created_at)
+    values (#{id,jdbcType=INTEGER}, #{vid,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, 
+      #{remark,jdbcType=VARCHAR}, #{status,jdbcType=BIT}, #{updatedAt,jdbcType=INTEGER}, 
+      #{createdAt,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yyc.songshu.manager.pojo.VideoView">
+    insert into video_view
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="vid != null">
+        vid,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="updatedAt != null">
+        updated_at,
+      </if>
+      <if test="createdAt != null">
+        created_at,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="vid != null">
+        #{vid,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=BIT},
+      </if>
+      <if test="updatedAt != null">
+        #{updatedAt,jdbcType=INTEGER},
+      </if>
+      <if test="createdAt != null">
+        #{createdAt,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yyc.songshu.manager.pojo.VideoView">
+    update video_view
+    <set>
+      <if test="vid != null">
+        vid = #{vid,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=BIT},
+      </if>
+      <if test="updatedAt != null">
+        updated_at = #{updatedAt,jdbcType=INTEGER},
+      </if>
+      <if test="createdAt != null">
+        created_at = #{createdAt,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yyc.songshu.manager.pojo.VideoView">
+    update video_view
+    set vid = #{vid,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR},
+      status = #{status,jdbcType=BIT},
+      updated_at = #{updatedAt,jdbcType=INTEGER},
+      created_at = #{createdAt,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

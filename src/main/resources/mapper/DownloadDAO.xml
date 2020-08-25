@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yyc.songshu.manager.dao.DownloadDAO">
+  <resultMap id="BaseResultMap" type="com.yyc.songshu.manager.pojo.Download">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="vid" jdbcType="INTEGER" property="vid" />
+    <result column="status" jdbcType="BIT" property="status" />
+    <result column="updated_at" jdbcType="INTEGER" property="updatedAt" />
+    <result column="created_at" jdbcType="INTEGER" property="createdAt" />
+    <association property="video" javaType="com.yyc.songshu.manager.pojo.Video">
+      <result column="id" jdbcType="INTEGER" property="id" />
+      <result column="title" jdbcType="VARCHAR" property="title" />
+      <result column="view_num" jdbcType="INTEGER" property="viewNum" />
+      <result column="like_num" jdbcType="INTEGER" property="likeNum" />
+      <result column="thumb" jdbcType="VARCHAR" property="thumb" />
+    </association>
+    <association property="users" javaType="com.yyc.songshu.manager.pojo.Users">
+      <result column="nickname" jdbcType="VARCHAR" property="nickname" />
+      <result column="avatar" jdbcType="VARCHAR" property="avatar" />
+      <result column="id" jdbcType="INTEGER" property="id" />
+    </association>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, user_id, vid, status, updated_at, created_at
+  </sql>
+  <!--我的下载-->
+  <select id="selectMyDownload" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    SELECT d.id,v.title,v.view_num,v.like_num,v.thumb,u.nickname,u.avatar,d.user_id
+FROM download d
+LEFT JOIN video v ON v.id=d.vid
+LEFT JOIN users u ON u.id=d.user_id
+limit #{page,jdbcType=INTEGER},#{limit,jdbcType=INTEGER}
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from download
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from download
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yyc.songshu.manager.pojo.Download">
+    insert into download (id, user_id, vid, 
+      status, updated_at, created_at
+      )
+    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{vid,jdbcType=INTEGER}, 
+      #{status,jdbcType=BIT}, #{updatedAt,jdbcType=INTEGER}, #{createdAt,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.yyc.songshu.manager.pojo.Download">
+    insert into download
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="vid != null">
+        vid,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="updatedAt != null">
+        updated_at,
+      </if>
+      <if test="createdAt != null">
+        created_at,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="vid != null">
+        #{vid,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=BIT},
+      </if>
+      <if test="updatedAt != null">
+        #{updatedAt,jdbcType=INTEGER},
+      </if>
+      <if test="createdAt != null">
+        #{createdAt,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yyc.songshu.manager.pojo.Download">
+    update download
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="vid != null">
+        vid = #{vid,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=BIT},
+      </if>
+      <if test="updatedAt != null">
+        updated_at = #{updatedAt,jdbcType=INTEGER},
+      </if>
+      <if test="createdAt != null">
+        created_at = #{createdAt,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yyc.songshu.manager.pojo.Download">
+    update download
+    set user_id = #{userId,jdbcType=INTEGER},
+      vid = #{vid,jdbcType=INTEGER},
+      status = #{status,jdbcType=BIT},
+      updated_at = #{updatedAt,jdbcType=INTEGER},
+      created_at = #{createdAt,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

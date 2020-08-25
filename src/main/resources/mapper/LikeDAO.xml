@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yyc.songshu.manager.dao.LikeDAO">
+  <resultMap id="BaseResultMap" type="com.yyc.songshu.manager.pojo.Like">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="vid" jdbcType="INTEGER" property="vid" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="updated_at" jdbcType="INTEGER" property="updatedAt" />
+    <result column="created_at" jdbcType="INTEGER" property="createdAt" />
+    <association property="video" javaType="com.yyc.songshu.manager.pojo.Video">
+      <result column="id" jdbcType="INTEGER" property="id" />
+      <result column="title" jdbcType="VARCHAR" property="title" />
+      <result column="view_num" jdbcType="INTEGER" property="viewNum" />
+      <result column="like_num" jdbcType="INTEGER" property="likeNum" />
+      <result column="thumb" jdbcType="VARCHAR" property="thumb" />
+    </association>
+    <association property="users" javaType="com.yyc.songshu.manager.pojo.Users">
+      <result column="nickname" jdbcType="VARCHAR" property="nickname" />
+      <result column="avatar" jdbcType="VARCHAR" property="avatar" />
+      <result column="id" jdbcType="INTEGER" property="id" />
+    </association>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, type, user_id, vid, status, updated_at, created_at
+  </sql>
+  <!--我的喜欢-->
+  <select id="selectMyLike" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    SELECT l.id,v.title,v.view_num,v.like_num,v.thumb,u.nickname,u.avatar,l.user_id
+FROM `like` l
+LEFT JOIN video v ON v.id=l.vid
+LEFT JOIN users u ON l.user_id=u.id
+limit #{page,jdbcType=INTEGER},#{limit,jdbcType=INTEGER}
+  </select>
+  <!--是否喜欢-->
+  <select id="selectIsLike" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+    SELECT 1 FROM `like` WHERE vid = #{vid,jdbcType=INTEGER} and user_id = #{userId,jdbcType=INTEGER}
+  </select>
+<update id="offLikeByVideo" parameterType="java.lang.Integer">
+  update `like` set status = 0
+  where  type = #{type,jdbcType=INTEGER} and  vid = #{vid,jdbcType=INTEGER} and user_id = #{userId,jdbcType=INTEGER}
+</update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from like
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from like
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yyc.songshu.manager.pojo.Like">
+    insert into like (id, type, user_id, 
+      vid, status, updated_at, 
+      created_at)
+    values (#{id,jdbcType=INTEGER}, #{type,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER},
+      #{vid,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{updatedAt,jdbcType=INTEGER},
+      #{createdAt,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yyc.songshu.manager.pojo.Like">
+    insert into `like`
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="vid != null">
+        vid,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="updatedAt != null">
+        updated_at,
+      </if>
+      <if test="createdAt != null">
+        created_at,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="vid != null">
+        #{vid,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="updatedAt != null">
+        #{updatedAt,jdbcType=INTEGER},
+      </if>
+      <if test="createdAt != null">
+        #{createdAt,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yyc.songshu.manager.pojo.Like">
+    update like
+    <set>
+      <if test="type != null">
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="vid != null">
+        vid = #{vid,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="updatedAt != null">
+        updated_at = #{updatedAt,jdbcType=INTEGER},
+      </if>
+      <if test="createdAt != null">
+        created_at = #{createdAt,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yyc.songshu.manager.pojo.Like">
+    update like
+    set type = #{type,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=INTEGER},
+      vid = #{vid,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      updated_at = #{updatedAt,jdbcType=INTEGER},
+      created_at = #{createdAt,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

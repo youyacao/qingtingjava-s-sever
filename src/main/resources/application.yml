@@ -1,0 +1,29 @@
+spring:
+  datasource:
+    username: EvanLove.Sw
+    #username: root
+    password: Evan-Love.Sw
+    #password: root
+    #url: jdbc:mysql://localhost:3306/xitao?serverTimezone=CTT&useSSL=false&useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
+    url: jdbc:mysql://122.114.195.108:1102/songshu?serverTimezone=CTT&useSSL=false&useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  servlet:
+    multipart:
+      max-file-size: 1GB
+      max-request-size: 1GB
+mybatis:
+  mapper-locations: classpath:/mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+    type-aliases-package: com.yyc.songshu.manager.pojo
+server:
+  servlet:
+    context-path: /manager
+  tomcat:
+    min-spare-threads: 20
+    max-connections: 100
+  port: 8100
+pagehelper:
+  params: count=countSql
+  support-methods-arguments: true
+  reasonable: true

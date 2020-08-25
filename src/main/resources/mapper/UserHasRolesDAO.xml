@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yyc.songshu.manager.dao.UserHasRolesDAO">
+  <resultMap id="BaseResultMap" type="com.yyc.songshu.manager.pojo.UserHasRoles">
+    <result column="role_id" jdbcType="INTEGER" property="roleId" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="model_type" jdbcType="VARCHAR" property="modelType" />
+  </resultMap>
+  <insert id="insert" parameterType="com.yyc.songshu.manager.pojo.UserHasRoles">
+    insert into user_has_roles (role_id, user_id, model_type
+      )
+    values (#{roleId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{modelType,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.yyc.songshu.manager.pojo.UserHasRoles">
+    insert into user_has_roles
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="roleId != null">
+        role_id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="modelType != null">
+        model_type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="roleId != null">
+        #{roleId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="modelType != null">
+        #{modelType,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>

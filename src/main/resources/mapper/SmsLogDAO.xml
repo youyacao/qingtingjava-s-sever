@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yyc.songshu.manager.dao.SmsLogDAO">
+  <resultMap id="BaseResultMap" type="com.yyc.songshu.manager.pojo.SmsLog">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="ip" jdbcType="VARCHAR" property="ip" />
+    <result column="day" jdbcType="INTEGER" property="day" />
+    <result column="status" jdbcType="BIT" property="status" />
+    <result column="updated_at" jdbcType="INTEGER" property="updatedAt" />
+    <result column="created_at" jdbcType="INTEGER" property="createdAt" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, phone, ip, day, status, updated_at, created_at
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sms_log
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from sms_log
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yyc.songshu.manager.pojo.SmsLog">
+    insert into sms_log (id, phone, ip, 
+      day, status, updated_at, 
+      created_at)
+    values (#{id,jdbcType=INTEGER}, #{phone,jdbcType=VARCHAR}, #{ip,jdbcType=VARCHAR}, 
+      #{day,jdbcType=INTEGER}, #{status,jdbcType=BIT}, #{updatedAt,jdbcType=INTEGER}, 
+      #{createdAt,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yyc.songshu.manager.pojo.SmsLog">
+    insert into sms_log
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="phone != null">
+        phone,
+      </if>
+      <if test="ip != null">
+        ip,
+      </if>
+      <if test="day != null">
+        day,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="updatedAt != null">
+        updated_at,
+      </if>
+      <if test="createdAt != null">
+        created_at,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="phone != null">
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="ip != null">
+        #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="day != null">
+        #{day,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=BIT},
+      </if>
+      <if test="updatedAt != null">
+        #{updatedAt,jdbcType=INTEGER},
+      </if>
+      <if test="createdAt != null">
+        #{createdAt,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yyc.songshu.manager.pojo.SmsLog">
+    update sms_log
+    <set>
+      <if test="phone != null">
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="ip != null">
+        ip = #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="day != null">
+        day = #{day,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=BIT},
+      </if>
+      <if test="updatedAt != null">
+        updated_at = #{updatedAt,jdbcType=INTEGER},
+      </if>
+      <if test="createdAt != null">
+        created_at = #{createdAt,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yyc.songshu.manager.pojo.SmsLog">
+    update sms_log
+    set phone = #{phone,jdbcType=VARCHAR},
+      ip = #{ip,jdbcType=VARCHAR},
+      day = #{day,jdbcType=INTEGER},
+      status = #{status,jdbcType=BIT},
+      updated_at = #{updatedAt,jdbcType=INTEGER},
+      created_at = #{createdAt,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
