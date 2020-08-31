@@ -31,11 +31,15 @@
 FROM `like` l
 LEFT JOIN video v ON v.id=l.vid
 LEFT JOIN users u ON l.user_id=u.id
+where l.status = 1 AND l.user_id=#{userId,jdbcType=INTEGER}
 limit #{page,jdbcType=INTEGER},#{limit,jdbcType=INTEGER}
   </select>
   <!--是否喜欢-->
   <select id="selectIsLike" parameterType="java.lang.Integer" resultType="java.lang.Integer">
-    SELECT 1 FROM `like` WHERE vid = #{vid,jdbcType=INTEGER} and user_id = #{userId,jdbcType=INTEGER}
+      SELECT 1 FROM `like` WHERE vid = #{vid,jdbcType=INTEGER}
+      and user_id = #{userId,jdbcType=INTEGER}
+       and status = 1
+       limit 1
   </select>
 <update id="offLikeByVideo" parameterType="java.lang.Integer">
   update `like` set status = 0

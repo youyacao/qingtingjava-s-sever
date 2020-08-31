@@ -85,10 +85,10 @@ public class UserServiceImpl implements UserService {
             request.putQueryParameter("SignName", "喜桃视频");
             request.putQueryParameter("TemplateCode", "SMS_196230305");
             String sendState = AliUtil.sendMSM(phone, request, "LTAI4GCDkYTqRS88yNXDicdQ", "mSQ5RYbfGW5ElIFhR21j7zJCPQra1W");
-            if (sendState.equals("Success")) {
+            if (sendState.equals("OK")) {
                 return JsonUtil.jsonRe(null, JsonResultUtil.ok("200", "成功"));
             }
-            return JsonUtil.jsonRe(null, JsonResultUtil.ok("400", "请求错误"));
+            return JsonUtil.jsonRe(null, JsonResultUtil.ok("400", sendState));
         }catch (Exception e){
             logger.error(e+":获取验证码");
             return JsonUtil.jsonRe(null, JsonResultUtil.ok("400", "号码错误"));
@@ -117,7 +117,9 @@ public class UserServiceImpl implements UserService {
             Users users = g.fromJson(userData, Users.class);
             String token = request.getHeader("token");
             users.setApiToken(token);
-            users.setAvatar(fileType);
+            if (!fileType.equals("Failure")){
+                users.setAvatar(fileType);
+            }
             int updateInfo = usersDAO.updateByTokenSelective(users);
             if (updateInfo > 0) {
                 return JsonUtil.jsonRe(null, JsonResultUtil.ok("200", "成功"));

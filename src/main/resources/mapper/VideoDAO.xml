@@ -47,6 +47,9 @@
   <update id="addCollectById" parameterType="java.lang.Integer">
     update video set collect_num=collect_num+1 where id = #{id,jdbcType=INTEGER}
   </update>
+  <update id="offCollectById" parameterType="java.lang.Integer">
+    update video set collect_num=collect_num-1 where id = #{id,jdbcType=INTEGER}
+  </update>
   <!--查询播放页-->
   <select id="selectVideoByIdOrMixIdMinId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     SELECT
@@ -108,7 +111,9 @@ ORDER BY v.updated_at DESC limit #{page,jdbcType=INTEGER},#{limit,jdbcType=INTEG
  SELECT v.title,v.view_num,v.like_num,v.thumb,v.video_url,v.created_at,v.user_id,v.id,
 u.username,u.nickname,u.avatar,v.comment_num,v.share_num,v.collect_num
 FROM video v
-LEFT JOIN users u ON u.id = v.user_id limit #{page,jdbcType=INTEGER},#{limit,jdbcType=INTEGER}
+LEFT JOIN users u ON u.id = v.user_id
+where u.id = #{id,jdbcType=INTEGER}
+limit #{page,jdbcType=INTEGER},#{limit,jdbcType=INTEGER}
   </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 

@@ -13,7 +13,7 @@ import java.util.Set;
 public class RedisUtil {
 
     // 全局过期时间(单位秒)
-    private static int expireTime = 10000;
+    private static int expireTime = 180;
 
     // 连接池
     private static JedisPool pool;

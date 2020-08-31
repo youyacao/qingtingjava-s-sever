@@ -31,6 +31,15 @@ public class Comment {
 
     private int commentCount;
 
+    private String isLike;
+
+    public String getIsLike() {
+        return isLike;
+    }
+
+    public void setIsLike(String isLike) {
+        this.isLike = isLike;
+    }
 
     public int getCommentCount() {
         return commentCount;

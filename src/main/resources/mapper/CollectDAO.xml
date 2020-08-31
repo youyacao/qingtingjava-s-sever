@@ -34,7 +34,10 @@
   </sql>
   <!--是否收藏-->
   <select id="selectIsCollect" parameterType="java.lang.Integer" resultType="java.lang.Integer">
-    SELECT 1 FROM collect WHERE vid =  #{vId,jdbcType=INTEGER} AND user_id = #{userId,jdbcType=INTEGER}
+    SELECT 1 FROM collect WHERE vid =  #{vId,jdbcType=INTEGER}
+    AND user_id = #{userId,jdbcType=INTEGER}
+    and status = 1
+    limit 1
   </select>
   <!--我的收藏-->
   <select id="selectByUserCollect" parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -43,6 +46,7 @@ FROM collect c
 LEFT JOIN video v ON v.id=c.vid
 LEFT JOIN users u ON c.user_id=u.id
 where c.user_id = #{userId,jdbcType=INTEGER}
+and  c.status = 1
 limit #{page,jdbcType=INTEGER},#{limit,jdbcType=INTEGER}
   </select>
 

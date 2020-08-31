@@ -9,4 +9,6 @@ public interface CollectService {
     String myCollect(String data);
 
     String insertCollect(String data);
+
+    String offCollect(String data);
 }

@@ -22,7 +22,7 @@ public interface VideoDAO {
 
     int updateByPrimaryKey(Video record);
 
-    List<Video> selectMyVideo(@Param("page") int page, @Param("limit") int limit);
+    List<Video> selectMyVideo(@Param("id")int id,@Param("page") int page, @Param("limit") int limit);
 
     List<Video> selectNewestVideo(@Param("page") int page, @Param("limit") int limit);
 
@@ -47,4 +47,6 @@ public interface VideoDAO {
     int addVideoCommentById(int id);
 
     int addCollectById(int id);
+
+    int offCollectById(int id);
 }

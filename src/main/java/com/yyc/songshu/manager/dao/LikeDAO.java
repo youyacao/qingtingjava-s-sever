@@ -19,7 +19,7 @@ public interface LikeDAO {
 
     int updateByPrimaryKey(Like record);
 
-    List<Like> selectMyLike(@Param("page") int page, @Param("limit") int limit);
+    List<Like> selectMyLike(@Param("page") int page, @Param("limit") int limit,@Param("userId")int userId);
 
     int offLikeByVideo(@Param("vid")int vid,@Param("type")int type,@Param("userId")int userId);
 

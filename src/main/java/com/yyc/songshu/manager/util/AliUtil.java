@@ -34,12 +34,17 @@ public class AliUtil {
         request.putQueryParameter("TemplateParam", "{\"code\":"+code+"}");
         try {
             CommonResponse response = clients.getCommonResponse(request);
-            System.out.println(response.getData());
-            RedisUtil.stringSet("code::"+phoneNumber,code);
+            String message  = JsonUtil.dataValue(response.getData(),"Message");
+            String ok  = JsonUtil.dataValue(response.getData(),"Code");
+            assert ok != null;
+            if (ok.equals("OK")){
+                RedisUtil.stringSet("code::"+phoneNumber,code);
+            }
+            return message;
         } catch (ClientException e) {
             e.printStackTrace();
+            return e.getErrMsg();
         }
-        return "Success";
     }
 
 

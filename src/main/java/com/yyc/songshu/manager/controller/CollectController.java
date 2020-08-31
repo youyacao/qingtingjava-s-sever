@@ -24,4 +24,9 @@ public class CollectController {
     public String addCollect(@RequestBody String data){
         return collectService.insertCollect(data);
     }
+
+    @RequestMapping(method = RequestMethod.POST,value = "/offCollect")
+    public String offCollect(@RequestBody String data){
+        return collectService.offCollect(data);
+    }
 }

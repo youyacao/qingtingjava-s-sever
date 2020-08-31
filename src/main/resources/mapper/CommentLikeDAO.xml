@@ -5,7 +5,7 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="comment_id" jdbcType="INTEGER" property="commentId" />
     <result column="user_id" jdbcType="INTEGER" property="userId" />
-    <result column="status" jdbcType="BIT" property="status" />
+    <result column="status" jdbcType="INTEGER" property="status" />
     <result column="updated_at" jdbcType="INTEGER" property="updatedAt" />
     <result column="created_at" jdbcType="INTEGER" property="createdAt" />
   </resultMap>
@@ -18,6 +18,9 @@
     from comment_like
     where id = #{id,jdbcType=INTEGER}
   </select>
+  <select id="selectLikeCommentExist" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+    SELECT 1 FROM comment_like WHERE user_id = #{userId,jdbcType=INTEGER} AND comment_id = #{commentId,jdbcType=INTEGER} AND status = 1 limit 1
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from comment_like
     where id = #{id,jdbcType=INTEGER}
@@ -27,7 +30,7 @@
       status, updated_at, created_at
       )
     values (#{id,jdbcType=INTEGER}, #{commentId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, 
-      #{status,jdbcType=BIT}, #{updatedAt,jdbcType=INTEGER}, #{createdAt,jdbcType=INTEGER}
+      #{status,jdbcType=INTEGER}, #{updatedAt,jdbcType=INTEGER}, #{createdAt,jdbcType=INTEGER}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.yyc.songshu.manager.pojo.CommentLike">
@@ -63,7 +66,7 @@
         #{userId,jdbcType=INTEGER},
       </if>
       <if test="status != null">
-        #{status,jdbcType=BIT},
+        #{status,jdbcType=INTEGER},
       </if>
       <if test="updatedAt != null">
         #{updatedAt,jdbcType=INTEGER},
@@ -83,7 +86,7 @@
         user_id = #{userId,jdbcType=INTEGER},
       </if>
       <if test="status != null">
-        status = #{status,jdbcType=BIT},
+        status = #{status,jdbcType=INTEGER},
       </if>
       <if test="updatedAt != null">
         updated_at = #{updatedAt,jdbcType=INTEGER},
@@ -98,7 +101,7 @@
     update comment_like
     set comment_id = #{commentId,jdbcType=INTEGER},
       user_id = #{userId,jdbcType=INTEGER},
-      status = #{status,jdbcType=BIT},
+      status = #{status,jdbcType=INTEGER},
       updated_at = #{updatedAt,jdbcType=INTEGER},
       created_at = #{createdAt,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}

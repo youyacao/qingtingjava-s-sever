@@ -5,9 +5,11 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.gson.Gson;
 import com.yyc.songshu.manager.dao.CommentDAO;
+import com.yyc.songshu.manager.dao.CommentLikeDAO;
 import com.yyc.songshu.manager.dao.UsersDAO;
 import com.yyc.songshu.manager.dao.VideoDAO;
 import com.yyc.songshu.manager.pojo.Comment;
+import com.yyc.songshu.manager.pojo.CommentLike;
 import com.yyc.songshu.manager.service.CommentService;
 import com.yyc.songshu.manager.util.JsonResultUtil;
 import com.yyc.songshu.manager.util.JsonUtil;
@@ -35,14 +37,24 @@ public class CommentServiceImpl implements CommentService {
     @Autowired
     private VideoDAO videoDAO;
 
+    @Autowired
+    private CommentLikeDAO commentLikeDAO;
+
     private static Logger logger = Logger.getLogger(CommentServiceImpl.class);
 
     @Override
     public String addComment(String commentData) {
         try {
             Gson gson = new Gson();
+            Integer uId = null;
             String token =  request.getHeader("token");
-            int uId = usersDAO.selectUserIdByToken(token);
+            if (token!=null){
+                try {
+                    uId = usersDAO.selectUserIdByToken(token);
+                }catch (Exception ignored){
+                    return JsonUtil.jsonRe(null, JsonResultUtil.ok("400", "请先登录"));
+                }
+            }
             System.out.println(commentData);
             Comment comment = gson.fromJson(commentData, Comment.class);
             System.out.println(comment);
@@ -66,7 +78,6 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public String selectCommentAll(String commentData) {
         try {
-
             String page = JsonUtil.dataValue(commentData, "page");
             String limit = JsonUtil.dataValue(commentData, "limit");
             String type = JsonUtil.dataValue(commentData, "type");
@@ -79,9 +90,10 @@ public class CommentServiceImpl implements CommentService {
             int count = commentDAO.selectCommentCount(Integer.parseInt(vid));
             int totalPage = count/Integer.valueOf(limit);
             List<Comment> comments = commentDAO.selectCommentByTypeAndVid(Integer.parseInt(type), Integer.parseInt(vid), Integer.parseInt(limit), (Integer.parseInt(page)-1));
-
+            String token =  request.getHeader("token");
+            int uId = usersDAO.selectUserIdByToken(token);
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("list",commentList(comments,commentDAO));
+            jsonObject.put("list",commentList(comments,commentDAO,uId));
             jsonObject.put("commentNum",count);
             jsonObject.put("page",page);
             jsonObject.put("limit",limit);
@@ -104,7 +116,9 @@ public class CommentServiceImpl implements CommentService {
             int totalPage = count / Integer.valueOf(limit);
             List<Comment> comments = commentDAO.selectChildComment(Integer.parseInt(pid), Integer.parseInt(page), (Integer.parseInt(limit)-1));
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("list", commentList(comments,commentDAO));
+            String token =  request.getHeader("token");
+            int uId = usersDAO.selectUserIdByToken(token);
+            jsonObject.put("list", commentList(comments,commentDAO,uId));
             jsonObject.put("commentNum", count);
             jsonObject.put("page", page);
             jsonObject.put("limit", limit);
@@ -142,10 +156,26 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public String likeOnComment(String commentId) {
         try {
+            Integer uId = null;
+            String token =  request.getHeader("token");
+            if (token!=null){
+                try {
+                    uId = usersDAO.selectUserIdByToken(token);
+                }catch (Exception ignored){
+                    return JsonUtil.jsonRe(null, JsonResultUtil.ok("400", "请先登录"));
+                }
+            }
+            CommentLike commentLike = new CommentLike();
+            commentLike.setCommentId(Integer.valueOf(commentId));
+            commentLike.setUserId(uId);
+            commentLike.setStatus(1);
             int commInt = Integer.parseInt(Objects.requireNonNull(JsonUtil.dataValue(commentId, "id")));
             int updateInt = commentDAO.likeOnCommentById(commInt);
             if (updateInt > 0) {
-                return JsonUtil.jsonRe(null, JsonResultUtil.error("200", "成功"));
+                int addInt = commentLikeDAO.insertSelective(commentLike);
+                if (addInt>0) {
+                    return JsonUtil.jsonRe(null, JsonResultUtil.error("200", "成功"));
+                }
             }
             return JsonUtil.jsonRe(null, JsonResultUtil.error("400", "数据错误"));
         }catch (Exception e){
@@ -157,10 +187,26 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public String likeOffComment(String commentId) {
         try {
+            Integer uId = null;
+            String token =  request.getHeader("token");
+            if (token!=null){
+                try {
+                    uId = usersDAO.selectUserIdByToken(token);
+                }catch (Exception ignored){
+                    return JsonUtil.jsonRe(null, JsonResultUtil.ok("400", "请先登录"));
+                }
+            }
+            CommentLike commentLike = new CommentLike();
+            commentLike.setCommentId(Integer.valueOf(commentId));
+            commentLike.setUserId(uId);
+            commentLike.setStatus(0);
             int commInt = Integer.parseInt(Objects.requireNonNull(JsonUtil.dataValue(commentId, "id")));
             int updateInt = commentDAO.likeOffCommentById(commInt);
             if (updateInt > 0) {
-                return JsonUtil.jsonRe(null, JsonResultUtil.error("200", "成功"));
+                int updateLikeInt = commentLikeDAO.updateByPrimaryKeySelective(commentLike);
+                if (updateLikeInt>0) {
+                    return JsonUtil.jsonRe(null, JsonResultUtil.error("200", "成功"));
+                }
             }
             return JsonUtil.jsonRe(null, JsonResultUtil.error("400", "数据错误"));
         }catch (Exception e){
@@ -168,12 +214,18 @@ public class CommentServiceImpl implements CommentService {
         }
     }
 
-    private List<Comment> commentList (List<Comment> comments,CommentDAO commentDAO){
+    private List<Comment> commentList (List<Comment> comments,CommentDAO commentDAO,int uid){
         for (Comment comment:comments){
             int second = (((int) Integer.valueOf(String.valueOf(new Date().getTime()).substring(0, 10)) - comment.getCreatedAt())) ;
             int min = ((((int) Integer.valueOf(String.valueOf(new Date().getTime()).substring(0, 10)) - comment.getCreatedAt())) / 60) ;
             int hour = (min / 60) ;
             System.out.println(second+":"+min+":"+hour+":"+comment.getCreatedAt());
+            Integer is = commentLikeDAO.selectLikeCommentExist(uid, comment.getId());
+            if (is == null) {
+                comment.setIsLike("false");
+            } else {
+                comment.setIsLike("true");
+            }
             if (comment.getLikeNum()>10000){
                 double cS = comment.getLikeNum()/10000;
                 comment.setLikeNumStr(String.valueOf(cS)+"W");

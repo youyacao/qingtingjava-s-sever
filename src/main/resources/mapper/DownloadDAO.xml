@@ -30,6 +30,7 @@
 FROM download d
 LEFT JOIN video v ON v.id=d.vid
 LEFT JOIN users u ON u.id=d.user_id
+where u.id = #{id,jdbcType=INTEGER}
 limit #{page,jdbcType=INTEGER},#{limit,jdbcType=INTEGER}
   </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">

@@ -53,8 +53,18 @@ public class CollectServiceImpl implements CollectService {
         try {
             String vid = JsonUtil.dataValue(data, "vid");
             String type = JsonUtil.dataValue(data, "type");
-            String token = request.getHeader("token");
-            int uId = usersDAO.selectUserIdByToken(token);
+            if (vid==null||type==null){
+                return JsonUtil.jsonRe(null, JsonResultUtil.error("400", "参数错误"));
+            }
+            Integer uId = null;
+            String token =  request.getHeader("token");
+            if (token!=null){
+                try {
+                    uId = usersDAO.selectUserIdByToken(token);
+                }catch (Exception ignored){
+                    return JsonUtil.jsonRe(null, JsonResultUtil.ok("400", "请先登录"));
+                }
+            }
             Collect collect = new Collect();
             collect.setUserId(uId);
             collect.setVid(Integer.parseInt(vid));
@@ -74,6 +84,42 @@ public class CollectServiceImpl implements CollectService {
             return JsonUtil.jsonRe(null, JsonResultUtil.error("400", "请求错误"));
         }
     }
+
+    @Override
+    public String offCollect(String data) {
+        try {
+            String vid = JsonUtil.dataValue(data, "vid");
+            String type = JsonUtil.dataValue(data, "type");
+            if (vid==null||type==null){
+                return JsonUtil.jsonRe(null, JsonResultUtil.error("400", "参数错误"));
+            }
+            Integer uId = null;
+            String token = request.getHeader("token");
+            if (token != null) {
+                try {
+                    uId = usersDAO.selectUserIdByToken(token);
+                } catch (Exception ignored) {
+                    return JsonUtil.jsonRe(null, JsonResultUtil.ok("400", "请先登录"));
+                }
+            }
+            Collect collect = new Collect();
+            collect.setUserId(uId);
+            collect.setVid(Integer.parseInt(vid));
+            collect.setType(Integer.parseInt(type));
+            collect.setStatus(0);
+            int updateInt = collectDAO.updateByPrimaryKeySelective(collect);
+            if (updateInt>0){
+                int updateIsLike = videoDAO.offCollectById(Integer.valueOf(vid));
+                if (updateIsLike>0){
+                    return JsonUtil.jsonRe(null, JsonResultUtil.error("200", "取消成功"));
+                }
+            }
+            return JsonUtil.jsonRe(null, JsonResultUtil.error("400", "服务器错误"));
+        }catch (Exception e){
+            return JsonUtil.jsonRe(null, JsonResultUtil.error("400", "请求错误"));
+        }
+    }
+
     private List<Collect> collectList (List<Collect> collects){
         long newDate = System.currentTimeMillis();
         for (Collect collect:collects){

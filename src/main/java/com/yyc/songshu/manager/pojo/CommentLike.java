@@ -7,7 +7,7 @@ public class CommentLike {
 
     private Integer userId;
 
-    private Boolean status;
+    private Integer status;
 
     private Integer updatedAt;
 
@@ -37,11 +37,11 @@ public class CommentLike {
         this.userId = userId;
     }
 
-    public Boolean getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 

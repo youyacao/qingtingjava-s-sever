@@ -50,11 +50,18 @@ public class VideoServiceImpl implements VideoService {
     @Override
     public String selectMyProduction(String  data) {
         try {
-            String token =  request.getHeader("token");
-            int uId = usersDAO.selectUserIdByToken(token);
+            Integer uId = null;
+            String token = request.getHeader("token");
+            if (token!=null){
+                try {
+                    uId = usersDAO.selectUserIdByToken(token);
+                }catch (Exception ignored){
+
+                }
+            }
             String page = JsonUtil.dataValue(data,"page");
             String limit = JsonUtil.dataValue(data,"limit");
-            List<Video> videos = videoDAO.selectMyVideo(Integer.valueOf(page), Integer.valueOf(limit));
+            List<Video> videos = videoDAO.selectMyVideo(uId,Integer.valueOf(page), Integer.valueOf(limit));
             return JsonUtil.jsonRe(videosList(videos,uId), JsonResultUtil.error("200", "成功"));
         }catch (Exception e){
                 logger.error(e+":我的作品");
@@ -120,9 +127,15 @@ public class VideoServiceImpl implements VideoService {
             String fileType = FileUtil.formUpdateFile(multipartFile);
             Gson g = new Gson();
             System.out.println(videoData);
-            String token =  request.getHeader("token");
-            System.out.println(token);
-            int uId = usersDAO.selectUserIdByToken(token);
+            Integer uId = null;
+            String token = request.getHeader("token");
+            if (token!=null){
+                try {
+                    uId = usersDAO.selectUserIdByToken(token);
+                }catch (Exception ignored){
+                    return JsonUtil.jsonRe(null, JsonResultUtil.ok("400", "请先登录"));
+                }
+            }
             //Video video = g.fromJson(videoData,Video.class);
             Article article = g.fromJson(videoData,Article.class);
             article.setThumb(fileType);

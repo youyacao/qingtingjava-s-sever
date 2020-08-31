@@ -34,9 +34,18 @@ public class LikeServiceImpl implements LikeService {
     @Override
     public String myLike(String data) {
         try {
+            Integer uId = null;
+            String token = request.getHeader("token");
+            if (token!=null){
+                try {
+                    uId = usersDAO.selectUserIdByToken(token);
+                }catch (Exception ignored){
+                    return JsonUtil.jsonRe(null, JsonResultUtil.ok("400", "请先登录"));
+                }
+            }
             String page = JsonUtil.dataValue(data,"page");
             String limit = JsonUtil.dataValue(data,"limit");
-            List<Like> likes = likeDAO.selectMyLike(Integer.valueOf(page), Integer.valueOf(limit));
+            List<Like> likes = likeDAO.selectMyLike(Integer.valueOf(page), Integer.valueOf(limit),uId);
             return JsonUtil.jsonRe(likes, JsonResultUtil.error("200", "成功"));
         }catch (Exception e){
             logger.error(e+":我的喜欢");
@@ -49,8 +58,15 @@ public class LikeServiceImpl implements LikeService {
         try {
             String vid = JsonUtil.dataValue(data, "vid");
             String type = JsonUtil.dataValue(data, "type");
+            Integer uId = null;
             String token = request.getHeader("token");
-            int uId = usersDAO.selectUserIdByToken(token);
+            if (token!=null){
+                try {
+                    uId = usersDAO.selectUserIdByToken(token);
+                }catch (Exception ignored){
+                    return JsonUtil.jsonRe(null, JsonResultUtil.ok("400", "请先登录"));
+                }
+            }
             int update = likeDAO.offLikeByVideo(Integer.parseInt(vid), Integer.parseInt(type), uId);
             if (update > 0) {
                 int updateInt = videoDAO.likeOffVideoById(Integer.valueOf(vid));
@@ -70,8 +86,15 @@ public class LikeServiceImpl implements LikeService {
         try {
             String vid = JsonUtil.dataValue(data, "vid");
             String type = JsonUtil.dataValue(data, "type");
+            Integer uId = null;
             String token = request.getHeader("token");
-            int uId = usersDAO.selectUserIdByToken(token);
+            if (token!=null){
+                try {
+                    uId = usersDAO.selectUserIdByToken(token);
+                }catch (Exception ignored){
+                    return JsonUtil.jsonRe(null, JsonResultUtil.ok("400", "请先登录"));
+                }
+            }
             Like like = new Like();
             like.setStatus(1);
             like.setUpdatedAt(Integer.valueOf(String.valueOf(new Date().getTime()).substring(0, 10)));

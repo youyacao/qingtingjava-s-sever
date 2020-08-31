@@ -19,5 +19,5 @@ public interface DownloadDAO {
 
     int updateByPrimaryKey(Download record);
 
-    List<Download> selectMyDownload(@Param("page") int page, @Param("limit") int limit);
+    List<Download> selectMyDownload(@Param("id")int id,@Param("page") int page, @Param("limit") int limit);
 }
