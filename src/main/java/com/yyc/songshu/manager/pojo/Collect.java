@@ -90,4 +90,19 @@ public class Collect {
     public void setCreatedAt(Integer createdAt) {
         this.createdAt = createdAt;
     }
+
+    @Override
+    public String toString() {
+        return "Collect{" +
+                "id=" + id +
+                ", userId=" + userId +
+                ", vid=" + vid +
+                ", status=" + status +
+                ", updatedAt=" + updatedAt +
+                ", createdAt=" + createdAt +
+                ", type=" + type +
+                ", video=" + video +
+                ", users=" + users +
+                '}';
+    }
 }

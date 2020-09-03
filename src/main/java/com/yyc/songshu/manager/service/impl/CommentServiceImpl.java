@@ -61,6 +61,7 @@ public class CommentServiceImpl implements CommentService {
             comment.setUserId(uId);
             comment.setUpdatedAt(Integer.valueOf(String.valueOf(new Date().getTime()).substring(0, 10)));
             comment.setCreatedAt(Integer.valueOf(String.valueOf(new Date().getTime()).substring(0, 10)));
+            System.out.println(comment);
             int saveInt = commentDAO.insertSelective(comment);
             if (saveInt > 0) {
                 int updateInt = videoDAO.addVideoCommentById(Integer.valueOf(comment.getVid()));
@@ -89,9 +90,17 @@ public class CommentServiceImpl implements CommentService {
             System.out.println(page+":"+limit+":"+type+":"+vid+":"+commentData);
             int count = commentDAO.selectCommentCount(Integer.parseInt(vid));
             int totalPage = count/Integer.valueOf(limit);
-            List<Comment> comments = commentDAO.selectCommentByTypeAndVid(Integer.parseInt(type), Integer.parseInt(vid), Integer.parseInt(limit), (Integer.parseInt(page)-1));
-            String token =  request.getHeader("token");
-            int uId = usersDAO.selectUserIdByToken(token);
+            int pageNum = (Integer.parseInt(page)-1) * Integer.valueOf(limit);
+            List<Comment> comments = commentDAO.selectCommentByTypeAndVid(Integer.parseInt(type), Integer.parseInt(vid), Integer.parseInt(limit), pageNum);
+            Integer uId = null;
+            String token = request.getHeader("token");
+            if (token!=null){
+                try {
+                    uId = usersDAO.selectUserIdByToken(token);
+                }catch (Exception ignored){
+
+                }
+            }
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("list",commentList(comments,commentDAO,uId));
             jsonObject.put("commentNum",count);
@@ -114,10 +123,18 @@ public class CommentServiceImpl implements CommentService {
             String pid = JsonUtil.dataValue(data, "pid");
             int count = commentDAO.selectChildCommentCount(Integer.parseInt(pid));
             int totalPage = count / Integer.valueOf(limit);
-            List<Comment> comments = commentDAO.selectChildComment(Integer.parseInt(pid), Integer.parseInt(page), (Integer.parseInt(limit)-1));
+            int pageNum = (Integer.parseInt(page)-1) * Integer.valueOf(limit);
+            List<Comment> comments = commentDAO.selectChildComment(Integer.parseInt(pid), Integer.parseInt(page), pageNum);
             JSONObject jsonObject = new JSONObject();
-            String token =  request.getHeader("token");
-            int uId = usersDAO.selectUserIdByToken(token);
+            Integer uId = null;
+            String token = request.getHeader("token");
+            if (token!=null){
+                try {
+                    uId = usersDAO.selectUserIdByToken(token);
+                }catch (Exception ignored){
+
+                }
+            }
             jsonObject.put("list", commentList(comments,commentDAO,uId));
             jsonObject.put("commentNum", count);
             jsonObject.put("page", page);
@@ -214,17 +231,22 @@ public class CommentServiceImpl implements CommentService {
         }
     }
 
-    private List<Comment> commentList (List<Comment> comments,CommentDAO commentDAO,int uid){
+    private List<Comment> commentList (List<Comment> comments,CommentDAO commentDAO,Integer uid){
         for (Comment comment:comments){
             int second = (((int) Integer.valueOf(String.valueOf(new Date().getTime()).substring(0, 10)) - comment.getCreatedAt())) ;
             int min = ((((int) Integer.valueOf(String.valueOf(new Date().getTime()).substring(0, 10)) - comment.getCreatedAt())) / 60) ;
             int hour = (min / 60) ;
-            System.out.println(second+":"+min+":"+hour+":"+comment.getCreatedAt());
-            Integer is = commentLikeDAO.selectLikeCommentExist(uid, comment.getId());
-            if (is == null) {
-                comment.setIsLike("false");
-            } else {
-                comment.setIsLike("true");
+            if (uid!=null){
+                System.out.println(second+":"+min+":"+hour+":"+comment.getCreatedAt());
+                Integer is = commentLikeDAO.selectLikeCommentExist(uid, comment.getId());
+                if (is == null) {
+                    comment.setIsLike("false");
+                } else {
+                    comment.setIsLike("true");
+                }
+            }else {
+                comment.setIsLike("");
+                comment.setIsLike("");
             }
             if (comment.getLikeNum()>10000){
                 double cS = comment.getLikeNum()/10000;

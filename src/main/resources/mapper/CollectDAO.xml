@@ -136,7 +136,6 @@ limit #{page,jdbcType=INTEGER},#{limit,jdbcType=INTEGER}
         created_at = #{createdAt,jdbcType=INTEGER},
       </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.yyc.songshu.manager.pojo.Collect">
     update collect

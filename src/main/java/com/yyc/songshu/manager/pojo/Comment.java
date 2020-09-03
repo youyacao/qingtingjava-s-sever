@@ -161,4 +161,26 @@ public class Comment {
     public void setCreatedAt(Integer createdAt) {
         this.createdAt = createdAt;
     }
+
+    @Override
+    public String toString() {
+        return "Comment{" +
+                "id=" + id +
+                ", type=" + type +
+                ", vid=" + vid +
+                ", userId=" + userId +
+                ", content='" + content + '\'' +
+                ", likeNum=" + likeNum +
+                ", pid=" + pid +
+                ", commentId=" + commentId +
+                ", status=" + status +
+                ", updatedAt=" + updatedAt +
+                ", createdAt=" + createdAt +
+                ", likeNumStr='" + likeNumStr + '\'' +
+                ", users=" + users +
+                ", time='" + time + '\'' +
+                ", commentCount=" + commentCount +
+                ", isLike='" + isLike + '\'' +
+                '}';
+    }
 }

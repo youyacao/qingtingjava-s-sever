@@ -107,6 +107,7 @@ public class CollectServiceImpl implements CollectService {
             collect.setVid(Integer.parseInt(vid));
             collect.setType(Integer.parseInt(type));
             collect.setStatus(0);
+            System.out.println(collect);
             int updateInt = collectDAO.updateByPrimaryKeySelective(collect);
             if (updateInt>0){
                 int updateIsLike = videoDAO.offCollectById(Integer.valueOf(vid));

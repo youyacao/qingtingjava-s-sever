@@ -27,7 +27,7 @@
 u.username,u.nickname,u.avatar,u.id
 FROM comment c
 LEFT JOIN users u ON u.id = c.user_id
-where c.type=#{type,jdbcType=INTEGER} and vid = #{vid,jdbcType=INTEGER}
+where c.type=#{type,jdbcType=INTEGER} and vid = #{vid,jdbcType=INTEGER} and pid = 0
 ORDER BY `created_at` DESC
 limit #{page,jdbcType=INTEGER},#{limit,jdbcType=INTEGER}
   </select>
