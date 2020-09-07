@@ -2,10 +2,10 @@ spring:
   datasource:
     username: EvanLove.Sw
     #username: root
-    password: Evan-Love.Sw
+    password: EvanLove.Sw
     #password: root
     #url: jdbc:mysql://localhost:3306/xitao?serverTimezone=CTT&useSSL=false&useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
-    url: jdbc:mysql://122.114.195.108:1102/songshu?serverTimezone=CTT&useSSL=false&useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
+    url: jdbc:mysql://122.114.86.158:3306/songshu?serverTimezone=CTT&useSSL=false&useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
     driver-class-name: com.mysql.cj.jdbc.Driver
   servlet:
     multipart:

@@ -124,7 +124,7 @@ public class CommentServiceImpl implements CommentService {
             int count = commentDAO.selectChildCommentCount(Integer.parseInt(pid));
             int totalPage = count / Integer.valueOf(limit);
             int pageNum = (Integer.parseInt(page)-1) * Integer.valueOf(limit);
-            List<Comment> comments = commentDAO.selectChildComment(Integer.parseInt(pid), Integer.parseInt(page), pageNum);
+            List<Comment> comments = commentDAO.selectChildComment(Integer.parseInt(pid), Integer.parseInt(limit), pageNum);
             JSONObject jsonObject = new JSONObject();
             Integer uId = null;
             String token = request.getHeader("token");
@@ -183,7 +183,7 @@ public class CommentServiceImpl implements CommentService {
                 }
             }
             CommentLike commentLike = new CommentLike();
-            commentLike.setCommentId(Integer.valueOf(commentId));
+            commentLike.setCommentId(Integer.valueOf(Objects.requireNonNull(JsonUtil.dataValue(commentId, "id"))));
             commentLike.setUserId(uId);
             commentLike.setStatus(1);
             int commInt = Integer.parseInt(Objects.requireNonNull(JsonUtil.dataValue(commentId, "id")));
@@ -196,6 +196,7 @@ public class CommentServiceImpl implements CommentService {
             }
             return JsonUtil.jsonRe(null, JsonResultUtil.error("400", "数据错误"));
         }catch (Exception e){
+            logger.error("点赞评论",e);
             return JsonUtil.jsonRe(null, JsonResultUtil.error("400", "评论不存在"));
         }
 
@@ -214,19 +215,22 @@ public class CommentServiceImpl implements CommentService {
                 }
             }
             CommentLike commentLike = new CommentLike();
-            commentLike.setCommentId(Integer.valueOf(commentId));
+            commentLike.setCommentId(Integer.valueOf(Objects.requireNonNull(JsonUtil.dataValue(commentId, "id"))));
             commentLike.setUserId(uId);
             commentLike.setStatus(0);
             int commInt = Integer.parseInt(Objects.requireNonNull(JsonUtil.dataValue(commentId, "id")));
             int updateInt = commentDAO.likeOffCommentById(commInt);
             if (updateInt > 0) {
                 int updateLikeInt = commentLikeDAO.updateByPrimaryKeySelective(commentLike);
+                System.out.println(updateLikeInt);
                 if (updateLikeInt>0) {
                     return JsonUtil.jsonRe(null, JsonResultUtil.error("200", "成功"));
                 }
             }
             return JsonUtil.jsonRe(null, JsonResultUtil.error("400", "数据错误"));
         }catch (Exception e){
+            logger.error("取消点赞评论",e);
+            e.printStackTrace();
             return JsonUtil.jsonRe(null, JsonResultUtil.error("400", "评论不存在"));
         }
     }
@@ -256,6 +260,7 @@ public class CommentServiceImpl implements CommentService {
             }
             int num = commentDAO.selectChildCommentCount(comment.getId());
             comment.setCommentCount(num);
+            comment.getUsers().setId(comment.getUserId());
             if (comment.getUsers().getAvatar()==null){
                 comment.getUsers().setAvatar("null");
             }

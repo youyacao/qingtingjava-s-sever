@@ -27,7 +27,7 @@
 u.username,u.nickname,u.avatar,u.id
 FROM comment c
 LEFT JOIN users u ON u.id = c.user_id
-where c.type=#{type,jdbcType=INTEGER} and vid = #{vid,jdbcType=INTEGER} and pid = 0
+where c.type=#{type,jdbcType=INTEGER} and c.vid = #{vid,jdbcType=INTEGER} and c.pid = 0
 ORDER BY `created_at` DESC
 limit #{page,jdbcType=INTEGER},#{limit,jdbcType=INTEGER}
   </select>
@@ -74,7 +74,7 @@ ORDER BY `created_at` DESC
 limit #{page,jdbcType=INTEGER},#{limit,jdbcType=INTEGER}
   </select>
   <select id="selectCommentCount" parameterType="java.lang.Integer" resultType="java.lang.Integer">
-     SELECT COUNT(id) FROM comment WHERE vid = #{vid,jdbcType=INTEGER}
+     SELECT COUNT(id) FROM comment WHERE vid = #{vid,jdbcType=INTEGER} and pid = 0
   </select>
 
   <select id="selectChildCommentCount" parameterType="java.lang.Integer" resultType="java.lang.Integer">

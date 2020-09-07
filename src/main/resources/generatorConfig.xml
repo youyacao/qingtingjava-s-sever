@@ -8,7 +8,7 @@
             <property name="suppressAllComments" value="true" />
         </commentGenerator>
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://122.114.195.108:3306/songshu"
+                        connectionURL="jdbc:mysql://122.114.86.158:3306/songshu"
                         userId="root" password="password">
         </jdbcConnection>
         <!--存放生成实体类的路径-->

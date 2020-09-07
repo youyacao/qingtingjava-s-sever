@@ -81,6 +81,7 @@ public class CollectServiceImpl implements CollectService {
             }
             return JsonUtil.jsonRe(null, JsonResultUtil.error("400", "参数错误"));
         }catch (Exception e){
+            logger.error("添加收藏",e);
             return JsonUtil.jsonRe(null, JsonResultUtil.error("400", "请求错误"));
         }
     }
@@ -117,6 +118,7 @@ public class CollectServiceImpl implements CollectService {
             }
             return JsonUtil.jsonRe(null, JsonResultUtil.error("400", "服务器错误"));
         }catch (Exception e){
+            logger.error("取消收藏",e);
             return JsonUtil.jsonRe(null, JsonResultUtil.error("400", "请求错误"));
         }
     }
