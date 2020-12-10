@@ -61,6 +61,9 @@ public class CollectServiceImpl implements CollectService {
             if (token!=null){
                 try {
                     uId = usersDAO.selectUserIdByToken(token);
+                    if (uId==null){
+                        return JsonUtil.jsonRe(null, JsonResultUtil.ok("100", "请先登入"));
+                    }
                 }catch (Exception ignored){
                     return JsonUtil.jsonRe(null, JsonResultUtil.ok("400", "请先登录"));
                 }
@@ -99,6 +102,9 @@ public class CollectServiceImpl implements CollectService {
             if (token != null) {
                 try {
                     uId = usersDAO.selectUserIdByToken(token);
+                    if (uId==null){
+                        return JsonUtil.jsonRe(null, JsonResultUtil.ok("100", "请先登入"));
+                    }
                 } catch (Exception ignored) {
                     return JsonUtil.jsonRe(null, JsonResultUtil.ok("400", "请先登录"));
                 }

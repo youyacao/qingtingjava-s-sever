@@ -36,7 +36,7 @@ public class RedisUtil {
         //
         config.setTestOnBorrow(false);
         // Redis服务器IP
-        String ADDR = "122.114.86.158";
+        String ADDR = "122.114.79.134";
         // Redis的端口号
         int PORT = 6379;
         // 访问密码

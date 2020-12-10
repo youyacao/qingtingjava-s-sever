@@ -5,9 +5,11 @@ import com.aliyuncs.CommonRequest;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.gson.Gson;
+import com.qiniu.storage.UploadManager;
+import com.qiniu.util.Auth;
+import com.qiniu.util.StringMap;
 import com.yyc.songshu.manager.dao.SmsDAO;
 import com.yyc.songshu.manager.dao.UsersDAO;
-import com.yyc.songshu.manager.pojo.Sms;
 import com.yyc.songshu.manager.pojo.Users;
 import com.yyc.songshu.manager.service.UserService;
 import com.yyc.songshu.manager.util.*;
@@ -25,6 +27,7 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
     @Autowired
     private UsersDAO usersDAO;
+
     private static Logger logger = Logger.getLogger(UserServiceImpl.class);
 
     @Autowired
@@ -33,6 +36,13 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private HttpServletRequest request;
 
+    @Autowired
+    private Auth auth;
+
+    @Autowired
+    private UploadManager uploadManager;
+
+    private StringMap putPolicy;
     @Override
     public String userLogin(String userData) {
         try {
@@ -100,7 +110,13 @@ public class UserServiceImpl implements UserService {
         try {
             String token = request.getHeader("token");
             Users users = usersDAO.selectUserInfoByToken(token);
+            if (token==null||token.length()==0){
+                return JsonUtil.jsonRe(null, JsonResultUtil.ok("100", "请先登入"));
+            }
             System.out.println(users);
+            if (users==null){
+                return JsonUtil.jsonRe(null, JsonResultUtil.ok("100", "请先登入"));
+            }
             return JsonUtil.jsonRe(users, JsonResultUtil.ok("200", "成功"));
         }catch (Exception e){
             logger.error(e+":获取用户信息");
@@ -112,14 +128,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public String updateInfo(MultipartFile file, String userData) {
         try {
-            String fileType = FileUtil.formUpdateFile(file);
+            String fileType = FileUtil.uploadQiNiu(file,auth, DataManage.getQiniuLocalPath(),DataManage.getQiniuBucket(),putPolicy,uploadManager);
             Gson g = new Gson();
             Users users = g.fromJson(userData, Users.class);
             String token = request.getHeader("token");
-            users.setApiToken(token);
-            if (!fileType.equals("Failure")){
-                users.setAvatar(fileType);
+            if (token==null||token.length()==0){
+                return JsonUtil.jsonRe(null, JsonResultUtil.ok("100", "请先登入"));
             }
+            users.setApiToken(token);
+            users.setAvatar(DataManage.getQiniuPath()+fileType);
             int updateInfo = usersDAO.updateByTokenSelective(users);
             if (updateInfo > 0) {
                 return JsonUtil.jsonRe(null, JsonResultUtil.ok("200", "成功"));
@@ -145,7 +162,7 @@ public class UserServiceImpl implements UserService {
         if (updateInt>0){
             return JsonUtil.jsonRe(null, JsonResultUtil.ok("200", "成功"));
         }
-        return JsonUtil.jsonRe(null, JsonResultUtil.ok("400", "数据错误"));
+        return JsonUtil.jsonRe(null, JsonResultUtil.ok("400", "请求错误"));
     }
 
     @Override

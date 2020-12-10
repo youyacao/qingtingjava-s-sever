@@ -4,22 +4,29 @@ import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.gson.Gson;
+import com.qiniu.storage.UploadManager;
+import com.qiniu.util.Auth;
+import com.qiniu.util.StringMap;
 import com.yyc.songshu.manager.dao.*;
 import com.yyc.songshu.manager.pojo.Article;
 import com.yyc.songshu.manager.pojo.Video;
 import com.yyc.songshu.manager.service.VideoService;
 import com.yyc.songshu.manager.threads.VideoListThread;
+import com.yyc.songshu.manager.util.DataManage;
 import com.yyc.songshu.manager.util.FileUtil;
 import com.yyc.songshu.manager.util.JsonResultUtil;
 import com.yyc.songshu.manager.util.JsonUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.*;
 
@@ -44,6 +51,14 @@ public class VideoServiceImpl implements VideoService {
 
     @Autowired
     private LikeDAO likeDAO;
+
+    @Autowired
+    private Auth auth;
+
+    @Autowired
+    private UploadManager uploadManager;
+
+    private StringMap putPolicy;
 
     private final static ExecutorService executorService = Executors.newCachedThreadPool();
 
@@ -124,7 +139,13 @@ public class VideoServiceImpl implements VideoService {
     public String addVideo(MultipartFile multipartFile, String videoData) {
         try {
             System.out.println(multipartFile+":"+videoData);
-            String fileType = FileUtil.formUpdateFile(multipartFile);
+            if (multipartFile==null){
+                return JsonUtil.jsonRe(null, JsonResultUtil.ok("400", "文件接收为空"));
+            }
+            if (videoData==null){
+                return JsonUtil.jsonRe(null, JsonResultUtil.ok("400", "附带参数为空"));
+            }
+            String fileType = FileUtil.uploadQiNiu(multipartFile,auth, DataManage.getQiniuLocalPath(),DataManage.getQiniuBucket(),putPolicy,uploadManager);
             Gson g = new Gson();
             System.out.println(videoData);
             Integer uId = null;
@@ -132,27 +153,31 @@ public class VideoServiceImpl implements VideoService {
             if (token!=null){
                 try {
                     uId = usersDAO.selectUserIdByToken(token);
+                    if (uId==null){
+                        return JsonUtil.jsonRe(null, JsonResultUtil.ok("100", "请先登入"));
+                    }
                 }catch (Exception ignored){
-                    return JsonUtil.jsonRe(null, JsonResultUtil.ok("400", "请先登录"));
+                    return JsonUtil.jsonRe(null, JsonResultUtil.ok("100", "请先登录"));
                 }
             }
-            //Video video = g.fromJson(videoData,Video.class);
-            Article article = g.fromJson(videoData,Article.class);
-            article.setThumb(fileType);
-            article.setType(2);
-            article.setUserId(uId);
-            article.setUpdatedAt((Integer.valueOf(String.valueOf(new Date().getTime()).substring(0, 10))));
-            article.setCreatedAt((Integer.valueOf(String.valueOf(new Date().getTime()).substring(0, 10))));
-            int insertInt = articleDAO.insertSelective(article);
+            Video video = g.fromJson(videoData,Video.class);
+            //Article article = g.fromJson(videoData,Article.class);
+            video.setThumb(DataManage.getQiniuPath()+fileType);
+            //video.setType(2);
+            video.setUserId(uId);
+            video.setUpdatedAt((Integer.valueOf(String.valueOf(new Date().getTime()).substring(0, 10))));
+            video.setCreatedAt((Integer.valueOf(String.valueOf(new Date().getTime()).substring(0, 10))));
+            int insertInt = videoDAO.insertSelective(video);
             if (insertInt > 0) {
+                logger.info("上传视频成功:"+fileType);
                 return JsonUtil.jsonRe(null, JsonResultUtil.error("200", "成功"));
             }
         }catch (Exception e){
             e.printStackTrace();
             logger.error(e+":添加视频");
-            return JsonUtil.jsonRe(null, JsonResultUtil.error("400", "数据错误"));
+            return JsonUtil.jsonRe(null, JsonResultUtil.error("400", "文件异常"));
         }
-        return JsonUtil.jsonRe(null, JsonResultUtil.error("400", "服务器错误"));
+        return JsonUtil.jsonRe(null, JsonResultUtil.error("400", "文件上传失败"));
     }
 
     @Override

@@ -5,7 +5,7 @@ spring:
     password: EvanLove.Sw
     #password: root
     #url: jdbc:mysql://localhost:3306/xitao?serverTimezone=CTT&useSSL=false&useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
-    url: jdbc:mysql://122.114.86.158:3306/songshu?serverTimezone=CTT&useSSL=false&useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
+    url: jdbc:mysql://122.114.79.134:3306/songshu?serverTimezone=CTT&useSSL=false&useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
     driver-class-name: com.mysql.cj.jdbc.Driver
   servlet:
     multipart:
@@ -27,3 +27,4 @@ pagehelper:
   params: count=countSql
   support-methods-arguments: true
   reasonable: true
+

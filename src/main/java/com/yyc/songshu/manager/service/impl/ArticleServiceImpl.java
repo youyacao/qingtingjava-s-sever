@@ -70,7 +70,13 @@ public class ArticleServiceImpl implements ArticleService {
                 return JsonUtil.jsonRe(null, JsonResultUtil.error("400", "请求错误"));
             }
             String token =  request.getHeader("token");
+            if (token==null||token.length()==0){
+                return JsonUtil.jsonRe(null, JsonResultUtil.ok("100", "请先登入"));
+            }
             int uId = usersDAO.selectUserIdByToken(token);
+            if (uId==0){
+                return JsonUtil.jsonRe(null, JsonResultUtil.ok("100", "请先登入"));
+            }
             Article article = JSONObject.parseObject(data, Article.class);
             article.setImages(fileType);
             article.setType(1);
@@ -82,7 +88,7 @@ public class ArticleServiceImpl implements ArticleService {
             return JsonUtil.jsonRe(null, JsonResultUtil.error("400", "请求错误"));
         }catch (Exception e){
             logger.error(e+":上传图片");
-            return JsonUtil.jsonRe(null, JsonResultUtil.error("400", "数据错误"));
+            return JsonUtil.jsonRe(null, JsonResultUtil.error("400", "参数错误"));
         }
     }
 }

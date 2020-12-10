@@ -1,15 +1,27 @@
 package com.yyc.songshu.manager.util;
 
 
+import com.google.gson.Gson;
+import com.qiniu.common.QiniuException;
+import com.qiniu.http.Response;
+import com.qiniu.storage.UploadManager;
+import com.qiniu.storage.model.DefaultPutRet;
+import com.qiniu.util.Auth;
+import com.qiniu.util.StringMap;
 import org.apache.commons.io.FileUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.beans.Encoder;
 import java.io.*;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
 public class FileUtil {
+
+    private StringMap putPolicy;
     /*写入数据*/
     public static String writeImageLocalhost(String path,byte[] imageData){
         try {
@@ -23,6 +35,23 @@ public class FileUtil {
         }catch (IOException e){
             return "写入失败";
         }
+    }
+    public static String uploadQiNiu(MultipartFile multipartFile, Auth auth, String url, String bucket, StringMap putPolicy, UploadManager uploadManager) throws Exception {
+        String fileName = multipartFile.getOriginalFilename();
+        System.out.println(fileName+":"+url);
+        File file = new File(url + fileName);
+        multipartFile.transferTo(file);
+        String token = auth.uploadToken(bucket,null,3600,putPolicy);
+        Response response = uploadManager.put(file,null,token);
+        //解析上传的结果
+        DefaultPutRet putRet = new Gson().fromJson(response.bodyString(),DefaultPutRet.class);
+        String imageName = putRet.hash;
+        int retry = 0;
+        while(response.needRetry() && retry < 3){
+            response = uploadManager.put(file,null,token);
+        }
+        return imageName;
+
     }
 
     public static String readVideoTime(File file){

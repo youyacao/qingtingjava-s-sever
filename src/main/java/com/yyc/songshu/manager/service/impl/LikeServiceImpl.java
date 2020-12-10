@@ -34,11 +34,14 @@ public class LikeServiceImpl implements LikeService {
     @Override
     public String myLike(String data) {
         try {
-            Integer uId = null;
+            int uId = 0;
             String token = request.getHeader("token");
             if (token!=null){
                 try {
                     uId = usersDAO.selectUserIdByToken(token);
+                    if (uId==0){
+                        return JsonUtil.jsonRe(null, JsonResultUtil.ok("100", "请先登入"));
+                    }
                 }catch (Exception ignored){
                     return JsonUtil.jsonRe(null, JsonResultUtil.ok("400", "请先登录"));
                 }
@@ -63,6 +66,9 @@ public class LikeServiceImpl implements LikeService {
             if (token!=null){
                 try {
                     uId = usersDAO.selectUserIdByToken(token);
+                    if (uId==null){
+                        return JsonUtil.jsonRe(null, JsonResultUtil.ok("100", "请先登入"));
+                    }
                 }catch (Exception ignored){
                     return JsonUtil.jsonRe(null, JsonResultUtil.ok("400", "请先登录"));
                 }
@@ -91,6 +97,9 @@ public class LikeServiceImpl implements LikeService {
             if (token!=null){
                 try {
                     uId = usersDAO.selectUserIdByToken(token);
+                    if (uId==null){
+                        return JsonUtil.jsonRe(null, JsonResultUtil.ok("400", "用户不存在"));
+                    }
                 }catch (Exception ignored){
                     return JsonUtil.jsonRe(null, JsonResultUtil.ok("400", "请先登录"));
                 }

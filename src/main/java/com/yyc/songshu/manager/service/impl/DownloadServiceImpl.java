@@ -26,6 +26,9 @@ public class DownloadServiceImpl implements DownloadService {
         try {
             String token =  request.getHeader("token");
             int uId = usersDAO.selectUserIdByToken(token);
+            if (uId==0){
+                return JsonUtil.jsonRe(null, JsonResultUtil.ok("100", "请先登入"));
+            }
             String page = JsonUtil.dataValue(data,"page");
             String limit = JsonUtil.dataValue(data,"limit");
             List<Download> downloads = downloadDAO.selectMyDownload(uId,Integer.valueOf(page), Integer.valueOf(limit));

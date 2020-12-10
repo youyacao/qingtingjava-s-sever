@@ -51,6 +51,9 @@ public class CommentServiceImpl implements CommentService {
             if (token!=null){
                 try {
                     uId = usersDAO.selectUserIdByToken(token);
+                    if (uId==null){
+                        return JsonUtil.jsonRe(null, JsonResultUtil.ok("100", "请先登入"));
+                    }
                 }catch (Exception ignored){
                     return JsonUtil.jsonRe(null, JsonResultUtil.ok("400", "请先登录"));
                 }
@@ -97,6 +100,9 @@ public class CommentServiceImpl implements CommentService {
             if (token!=null){
                 try {
                     uId = usersDAO.selectUserIdByToken(token);
+                    if (uId==null){
+                        return JsonUtil.jsonRe(null, JsonResultUtil.ok("100", "请先登入"));
+                    }
                 }catch (Exception ignored){
 
                 }
@@ -131,6 +137,9 @@ public class CommentServiceImpl implements CommentService {
             if (token!=null){
                 try {
                     uId = usersDAO.selectUserIdByToken(token);
+                    if (uId==null){
+                        return JsonUtil.jsonRe(null, JsonResultUtil.ok("100", "请先登入"));
+                    }
                 }catch (Exception ignored){
 
                 }
@@ -163,7 +172,7 @@ public class CommentServiceImpl implements CommentService {
             if (delInt > 0) {
                 return JsonUtil.jsonRe(null, JsonResultUtil.error("200", "成功"));
             }
-            return JsonUtil.jsonRe(null, JsonResultUtil.error("400", "数据错误"));
+            return JsonUtil.jsonRe(null, JsonResultUtil.error("400", "参数错误"));
         }catch (Exception e){
             logger.error("删除评论",e);
             return JsonUtil.jsonRe(null, JsonResultUtil.error("400", "请求错误"));
@@ -178,6 +187,9 @@ public class CommentServiceImpl implements CommentService {
             if (token!=null){
                 try {
                     uId = usersDAO.selectUserIdByToken(token);
+                    if (uId==null){
+                        return JsonUtil.jsonRe(null, JsonResultUtil.ok("100", "请先登入"));
+                    }
                 }catch (Exception ignored){
                     return JsonUtil.jsonRe(null, JsonResultUtil.ok("400", "请先登录"));
                 }
