@@ -63,7 +63,38 @@ public class Users {
     private Integer updatedAt;
 
     private Integer createdAt;
+
     private String sign;
+
+    private String myFollowCount;
+
+    private String myFansCount;
+
+    private String myLikeCount;
+
+    public String getMyLikeCount() {
+        return myLikeCount;
+    }
+
+    public void setMyLikeCount(String myLikeCount) {
+        this.myLikeCount = myLikeCount;
+    }
+
+    public String getMyFollowCount() {
+        return myFollowCount;
+    }
+
+    public void setMyFollowCount(String myFollowCount) {
+        this.myFollowCount = myFollowCount;
+    }
+
+    public String getMyFansCount() {
+        return myFansCount;
+    }
+
+    public void setMyFansCount(String myFansCount) {
+        this.myFansCount = myFansCount;
+    }
 
     public String getSign() {
         return sign;

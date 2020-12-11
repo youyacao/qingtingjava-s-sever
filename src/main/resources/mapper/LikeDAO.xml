@@ -34,6 +34,10 @@ LEFT JOIN users u ON l.user_id=u.id
 where l.status = 1 AND l.user_id=#{userId,jdbcType=INTEGER}
 limit #{page,jdbcType=INTEGER},#{limit,jdbcType=INTEGER}
   </select>
+  <!--点赞数量-->
+  <select id="onLikeCount" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+    select count(*) from `like` where user_id=#{userId,jdbcType=INTEGER}
+  </select>
   <!--是否喜欢-->
   <select id="selectIsLike" parameterType="java.lang.Integer" resultType="java.lang.Integer">
       SELECT 1 FROM `like` WHERE vid = #{vid,jdbcType=INTEGER}

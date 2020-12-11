@@ -20,8 +20,12 @@ public interface FollowDAO {
 
     int updateByPrimaryKey(Follow record);
 
-    List<Follow> selectMyFollow(@Param("page") int page, @Param("limit") int limit);
+    List<Follow> selectMyFollow(@Param("page") int page, @Param("limit") int limit,@Param("id")int id);
 
-    List<Follow> selectMyFans(@Param("page") int page, @Param("limit") int limit);
+    List<Follow> selectMyFans(@Param("page") int page, @Param("limit") int limit,@Param("id")int id);
+
+    Integer selectMyFollowCount(int id);
+
+    Integer selectMyFansCount(int id);
 
 }

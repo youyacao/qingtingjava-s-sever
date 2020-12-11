@@ -8,6 +8,8 @@ import com.google.gson.Gson;
 import com.qiniu.storage.UploadManager;
 import com.qiniu.util.Auth;
 import com.qiniu.util.StringMap;
+import com.yyc.songshu.manager.dao.FollowDAO;
+import com.yyc.songshu.manager.dao.LikeDAO;
 import com.yyc.songshu.manager.dao.SmsDAO;
 import com.yyc.songshu.manager.dao.UsersDAO;
 import com.yyc.songshu.manager.pojo.Users;
@@ -41,6 +43,12 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UploadManager uploadManager;
+
+    @Autowired
+    private FollowDAO followDAO;
+
+    @Autowired
+    private LikeDAO likeDAO;
 
     private StringMap putPolicy;
     @Override
@@ -113,13 +121,32 @@ public class UserServiceImpl implements UserService {
             if (token==null||token.length()==0){
                 return JsonUtil.jsonRe(null, JsonResultUtil.ok("100", "请先登入"));
             }
-            System.out.println(users);
             if (users==null){
                 return JsonUtil.jsonRe(null, JsonResultUtil.ok("100", "请先登入"));
             }
+            Integer fc = followDAO.selectMyFansCount(users.getId());
+            Integer lc = followDAO.selectMyFollowCount(users.getId());
+            Integer ec = likeDAO.onLikeCount(users.getId());
+            System.out.println(fc+":"+lc+":"+ec);
+            if (fc > 10000){
+                users.setMyFansCount(fc+"W");
+            }else {
+                users.setMyFansCount(fc+"");
+            }
+            if (lc>10000){
+                users.setMyFollowCount(lc+"W");
+            }else {
+                users.setMyFollowCount(lc+"");
+            }
+            if (ec>10000){
+                users.setMyLikeCount(ec+"W");
+            }else {
+                users.setMyLikeCount(ec+"");
+            }
+            System.out.println(users);
             return JsonUtil.jsonRe(users, JsonResultUtil.ok("200", "成功"));
         }catch (Exception e){
-            logger.error(e+":获取用户信息");
+            logger.error("获取用户信息",e);
             return JsonUtil.jsonRe(null, JsonResultUtil.ok("400", "请求错误"));
         }
 
@@ -128,7 +155,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public String updateInfo(MultipartFile file, String userData) {
         try {
-            String fileType = FileUtil.uploadQiNiu(file,auth, DataManage.getQiniuLocalPath(),DataManage.getQiniuBucket(),putPolicy,uploadManager);
             Gson g = new Gson();
             Users users = g.fromJson(userData, Users.class);
             String token = request.getHeader("token");
@@ -136,7 +162,12 @@ public class UserServiceImpl implements UserService {
                 return JsonUtil.jsonRe(null, JsonResultUtil.ok("100", "请先登入"));
             }
             users.setApiToken(token);
-            users.setAvatar(DataManage.getQiniuPath()+fileType);
+            if (file==null){
+                users.setAvatar(null);
+            }else {
+                String fileType = FileUtil.uploadQiNiu(file, auth, DataManage.getQiniuLocalPath(), DataManage.getQiniuBucket(), putPolicy, uploadManager);
+                users.setAvatar(DataManage.getQiniuPath() + fileType);
+            }
             int updateInfo = usersDAO.updateByTokenSelective(users);
             if (updateInfo > 0) {
                 return JsonUtil.jsonRe(null, JsonResultUtil.ok("200", "成功"));
@@ -179,6 +210,24 @@ public class UserServiceImpl implements UserService {
         List<Users> users = new ArrayList<>();
         users.add(usersDAO.selectByPrimaryKey(uId));
         return JsonUtil.jsonRe(users, JsonResultUtil.ok("200", "成功"));
+    }
+
+    @Override
+    public String login(String data) {
+        String username = JsonUtil.dataValue(data,"username");
+        String password = JsonUtil.dataValue(data,"password");
+        String token = "ssssssssssssssssssssssssssssssa";
+        assert username != null;
+        if (username.equals("admin")){
+            assert password != null;
+            if (password.equals("admin")){
+                return JsonUtil.jsonRe(token, JsonResultUtil.ok("0", "成功"));
+            }else {
+                return JsonUtil.jsonRe(null, JsonResultUtil.ok("400", "密码错误"));
+            }
+        }else {
+            return JsonUtil.jsonRe(null, JsonResultUtil.ok("400", "账号错误"));
+        }
     }
     //基本配置（-短信配置-储存配置-关于我们），视频管理（分类管理，视频列表），用户列表，频道管理，侵权申述，评论管理
 

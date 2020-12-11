@@ -31,11 +31,18 @@ public class VideoListThread implements Callable<List<Video>> {
             int hour = (min / 60) ;
             if (id != null) {
                 Integer is = collectDAO.selectIsCollect(video.getId(), id);
+                Integer isC = collectDAO.selectIsCollect(video.getId(), id);
                 Integer isL = likeDAO.selectIsLike(video.getId(), id);
+
                 if (is == null) {
                     video.setIsCollect("false");
                 } else {
                     video.setIsCollect("true");
+                }
+                if (isC == null) {
+                    video.setIsFocus("false");
+                } else {
+                    video.setIsFocus("true");
                 }
                 if (isL == null) {
                     video.setIsLike("false");

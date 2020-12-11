@@ -21,12 +21,20 @@
   <!--我的关注-->
   <select id="selectMyFollow" parameterType="java.lang.Integer" resultMap="BaseResultMap">
      SELECT f.id,u.username,u.nickname,u.avatar FROM follow f
-LEFT JOIN users u ON f.user_id=u.id limit #{page,jdbcType=INTEGER},#{limit,jdbcType=INTEGER}
+LEFT JOIN users u ON f.user_id=u.id where u.id= #{id,jdbcType=INTEGER}  limit #{page,jdbcType=INTEGER},#{limit,jdbcType=INTEGER}
+  </select>
+  <select id="selectMyFollowCount" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+     SELECT count(*) FROM follow f
+LEFT JOIN users u ON f.user_id=u.id where u.id= #{id,jdbcType=INTEGER}
   </select>
   <!--我的粉丝-->
   <select id="selectMyFans" parameterType="java.lang.Integer" resultMap="BaseResultMap">
 SELECT f.id,u.username,u.nickname,u.avatar FROM follow f
-LEFT JOIN users u ON f.follow_id=u.id limit #{page,jdbcType=INTEGER},#{limit,jdbcType=INTEGER}
+LEFT JOIN users u ON f.follow_id=u.id where u.id=#{id,jdbcType=INTEGER}  limit #{page,jdbcType=INTEGER},#{limit,jdbcType=INTEGER}
+  </select>
+  <select id="selectMyFansCount" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+     SELECT count(*) FROM follow f
+LEFT JOIN users u ON  f.follow_id=u.id where u.id= #{id,jdbcType=INTEGER}
   </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 

@@ -162,7 +162,7 @@ public class VideoServiceImpl implements VideoService {
             }
             Video video = g.fromJson(videoData,Video.class);
             //Article article = g.fromJson(videoData,Article.class);
-            video.setThumb(DataManage.getQiniuPath()+fileType);
+            video.setVideoUrl(DataManage.getQiniuPath()+fileType);
             //video.setType(2);
             video.setUserId(uId);
             video.setUpdatedAt((Integer.valueOf(String.valueOf(new Date().getTime()).substring(0, 10))));
@@ -175,7 +175,7 @@ public class VideoServiceImpl implements VideoService {
         }catch (Exception e){
             e.printStackTrace();
             logger.error(e+":添加视频");
-            return JsonUtil.jsonRe(null, JsonResultUtil.error("400", "文件异常"));
+            return JsonUtil.jsonRe(null, JsonResultUtil.error("400", "参数异常"));
         }
         return JsonUtil.jsonRe(null, JsonResultUtil.error("400", "文件上传失败"));
     }

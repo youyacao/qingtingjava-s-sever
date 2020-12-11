@@ -21,6 +21,8 @@ public interface LikeDAO {
 
     List<Like> selectMyLike(@Param("page") int page, @Param("limit") int limit,@Param("userId")int userId);
 
+    Integer onLikeCount(int uid);
+
     int offLikeByVideo(@Param("vid")int vid,@Param("type")int type,@Param("userId")int userId);
 
     Integer selectIsLike(@Param("vid")int vid,@Param("userId")int userId);

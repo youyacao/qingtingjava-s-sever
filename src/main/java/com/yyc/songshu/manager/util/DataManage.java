@@ -10,8 +10,10 @@ public class DataManage {
 
     private final static String QINIU_AK = "7Swd0fkWhx8P5IznfkF2t_5vMcik2_Vwt1JqLJOe";
     private final static String QINIU_SK = "XwYhJU5xdsqDVKbwC03eljUW2KpyByLzYnf_h6gf";
-    private final static String QINIU_BUCKET = "songshuguanfang";
-    private final static String QINIU_PATH = "https://cun.youyacao.com/";
+    //private final static String QINIU_BUCKET = "songshuguanfang";
+    private final static String QINIU_BUCKET = "qingtingjava";
+    //private final static String QINIU_PATH = "https://cun.youyacao.com/";
+    private final static String QINIU_PATH = "https://qingtingjavacun.youyacao.com/";
     //private final static String QINIU_LOCAL_PATH = "C:\\Users\\10481\\Desktop\\text\\";
     private final static String QINIU_LOCAL_PATH = "/www/wwwroot/qingtingjavaapi.youyacao.com/static/";
 

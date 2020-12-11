@@ -51,6 +51,16 @@ public class Video {
 
     private String isLike;
 
+    private String isFocus;
+
+    public String getIsFocus() {
+        return isFocus;
+    }
+
+    public void setIsFocus(String isFocus) {
+        this.isFocus = isFocus;
+    }
+
     public String getIsLike() {
         return isLike;
     }

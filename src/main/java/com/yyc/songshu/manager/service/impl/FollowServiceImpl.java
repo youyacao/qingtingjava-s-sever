@@ -1,6 +1,7 @@
 package com.yyc.songshu.manager.service.impl;
 
 import com.yyc.songshu.manager.dao.FollowDAO;
+import com.yyc.songshu.manager.dao.UsersDAO;
 import com.yyc.songshu.manager.pojo.Follow;
 import com.yyc.songshu.manager.service.FollowServcie;
 import com.yyc.songshu.manager.util.JsonResultUtil;
@@ -21,6 +22,8 @@ private FollowDAO followDAO;
     private static Logger logger = Logger.getLogger(FollowServiceImpl.class);
     @Autowired
     private HttpServletRequest request;
+    @Autowired
+    private UsersDAO usersDAO;
     @Override
     public String myFollow(String data) {
         try {
@@ -30,7 +33,11 @@ private FollowDAO followDAO;
             if (token==null||token.length()==0){
                 return JsonUtil.jsonRe(null, JsonResultUtil.ok("100", "请先登入"));
             }
-            List<Follow> follows = followDAO.selectMyFollow(Integer.valueOf(page), Integer.valueOf(limit));
+            int uId = usersDAO.selectUserIdByToken(token);
+            if (uId==0){
+                return JsonUtil.jsonRe(null, JsonResultUtil.ok("100", "请先登入"));
+            }
+            List<Follow> follows = followDAO.selectMyFollow(Integer.valueOf(page), Integer.valueOf(limit),uId);
             return JsonUtil.jsonRe(follows, JsonResultUtil.error("200", "成功"));
         }catch (Exception e){
             logger.error(e+":我的关注");
@@ -47,7 +54,11 @@ private FollowDAO followDAO;
             if (token==null||token.length()==0){
                 return JsonUtil.jsonRe(null, JsonResultUtil.ok("100", "请先登入"));
             }
-            List<Follow> follows = followDAO.selectMyFans(Integer.valueOf(page), Integer.valueOf(limit));
+            int uId = usersDAO.selectUserIdByToken(token);
+            if (uId==0){
+                return JsonUtil.jsonRe(null, JsonResultUtil.ok("100", "请先登入"));
+            }
+            List<Follow> follows = followDAO.selectMyFans(Integer.valueOf(page), Integer.valueOf(limit),uId);
             return JsonUtil.jsonRe(follows, JsonResultUtil.error("200", "成功"));
         }catch (Exception e){
             logger.error(e+":我的粉丝");

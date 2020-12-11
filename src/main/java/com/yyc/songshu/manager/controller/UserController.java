@@ -68,14 +68,7 @@ public class UserController {
     @RequestMapping(method = RequestMethod.POST,value = "/login")
     public String login(@RequestBody String s){
         System.out.println(s);
-        return "{\n" +
-                "    \"code\": 200,\n" +
-                "    \"msg\": \"success\",\n" +
-                "    \"data\": {\n" +
-                "        \"token\": \"Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC94aW54aW5nLWFwaS50ZXN0LmNvbVwvYXBpXC92MVwvbG9naW4iLCJpYXQiOjE1ODU5ODU2NTUsImV4cCI6MTU4NTk4OTI1NSwibmJmIjoxNTg1OTg1NjU1LCJqdGkiOiJEM3hwcXlTYWRCU3NFSjc5Iiwic3ViIjoxMDAwMCwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.spceIQnlkXs8oal7eiph6L9yJqOeWnhppXdzt6ulDdk\",\n" +
-                "        \"expires_in\": 3600\n" +
-                "    }\n" +
-                "}";
+        return userService.login(s);
     }
     @RequestMapping(method = RequestMethod.GET,value = "/user")
     public String info(@RequestParam(value = "uId")int uId){

@@ -20,4 +20,6 @@ public interface UserService {
     String deleteUser(int uId);
 
     String getAdminUserInfo(int uId);
+
+    String login(String data);
 }
