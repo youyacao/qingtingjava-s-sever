@@ -17,6 +17,7 @@
       <result column="nickname" jdbcType="VARCHAR" property="nickname" />
       <result column="avatar" jdbcType="VARCHAR" property="avatar" />
       <result column="id" jdbcType="INTEGER" property="id" />
+      <result column="username" jdbcType="VARCHAR" property="username" />
     </association>
   </resultMap>
   <sql id="Base_Column_List">
@@ -24,7 +25,7 @@
   </sql>
   <select id="selectCommentByTypeAndVid" parameterType="java.lang.Integer" resultMap="BaseResultMap">
   SELECT c.id, c.type, c.vid, c.user_id, c.content, c.like_num, c.pid, c.comment_id, c.status, c.updated_at, c.created_at,
-u.username,u.nickname,u.avatar,u.id
+u.username,u.nickname,u.avatar,u.id,u.username
 FROM comment c
 LEFT JOIN users u ON u.id = c.user_id
 where c.type=#{type,jdbcType=INTEGER} and c.vid = #{vid,jdbcType=INTEGER} and c.pid = 0
@@ -33,7 +34,7 @@ limit #{page,jdbcType=INTEGER},#{limit,jdbcType=INTEGER}
   </select>
   <select id="selectAllComment" parameterType="java.lang.Integer" resultMap="BaseResultMap">
      SELECT c.id, c.type, c.vid, c.user_id, c.content, c.like_num, c.pid, c.comment_id, c.status, c.updated_at, c.created_at,
-u.username,u.nickname,u.avatar,u.id
+u.username,u.nickname,u.avatar,u.id,u.username
 FROM comment c
 LEFT JOIN users u ON u.id = c.user_id
 ORDER BY `created_at` DESC
@@ -70,8 +71,19 @@ u.username,u.nickname,u.avatar,u.id
 FROM comment c
 LEFT JOIN users u ON u.id = c.user_id
 where c.pid=#{pid,jdbcType=INTEGER}
-ORDER BY `created_at` DESC
-limit #{page,jdbcType=INTEGER},#{limit,jdbcType=INTEGER}
+ORDER BY c.`created_at` DESC
+  </select>
+  <select id="selectIsRe" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+      SELECT 1 FROM comment WHERE id = #{id,jdbcType=INTEGER}
+       and comment_id = 1
+       limit 1
+  </select>
+  <select id="selectChild" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+     SELECT u.username,u.nickname,u.avatar,u.id,u.username
+FROM comment c
+LEFT JOIN users u ON u.id = c.user_id
+where c.comment_id=#{id,jdbcType=INTEGER}
+ORDER BY c.`created_at` DESC
   </select>
   <select id="selectCommentCount" parameterType="java.lang.Integer" resultType="java.lang.Integer">
      SELECT COUNT(id) FROM comment WHERE vid = #{vid,jdbcType=INTEGER} and pid = 0

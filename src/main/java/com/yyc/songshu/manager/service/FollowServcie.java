@@ -14,4 +14,8 @@ public interface FollowServcie {
      * @return 我的粉丝
      */
     String myFans(String data);
+
+    String addFollow(String data);
+
+    String offFollow(String data);
 }

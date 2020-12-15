@@ -1,5 +1,7 @@
 package com.yyc.songshu.manager.pojo;
 
+import java.util.List;
+
 public class Comment {
     private Integer id;
 
@@ -32,6 +34,26 @@ public class Comment {
     private int commentCount;
 
     private String isLike;
+
+    private List<Comment> reply_user;
+
+    private String is_reply;
+
+    public List<Comment> getReply_user() {
+        return reply_user;
+    }
+
+    public void setReply_user(List<Comment> reply_user) {
+        this.reply_user = reply_user;
+    }
+
+    public String getIs_reply() {
+        return is_reply;
+    }
+
+    public void setIs_reply(String is_reply) {
+        this.is_reply = is_reply;
+    }
 
     public String getIsLike() {
         return isLike;

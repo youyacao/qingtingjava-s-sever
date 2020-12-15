@@ -50,7 +50,7 @@
   </select>
   <select id="selectUserInfoByToken" parameterType="java.lang.String" resultMap="BaseResultMap">
     select
-    id, username, phone, email, avatar,sign
+    id, username, phone, email, avatar,sign,nickname
      from users where api_token = #{apiToken}
   </select>
   <select id="selectByUserExist" parameterType="java.lang.String" resultType="java.lang.Integer">
@@ -78,7 +78,7 @@
         phone = #{phone,jdbcType=VARCHAR},
       </if>
       <if test="sign != null">
-        phone = #{sign,jdbcType=VARCHAR},
+        sign = #{sign,jdbcType=VARCHAR},
       </if>
       <if test="email != null">
         email = #{email,jdbcType=VARCHAR},

@@ -1,6 +1,7 @@
 package com.yyc.songshu.manager.threads;
 
 import com.yyc.songshu.manager.dao.CollectDAO;
+import com.yyc.songshu.manager.dao.FollowDAO;
 import com.yyc.songshu.manager.dao.LikeDAO;
 import com.yyc.songshu.manager.pojo.Video;
 import com.yyc.songshu.manager.util.VideoUTtils;
@@ -14,12 +15,14 @@ public class VideoListThread implements Callable<List<Video>> {
     private Integer id;
     private CollectDAO collectDAO;
     private LikeDAO likeDAO;
+    private FollowDAO followDAO;
 
-    public VideoListThread(List<Video> videos, Integer id, CollectDAO collectDAO, LikeDAO likeDAO) {
+    public VideoListThread(List<Video> videos, Integer id, CollectDAO collectDAO, LikeDAO likeDAO,FollowDAO followDAO) {
         this.videos = videos;
         this.id = id;
         this.collectDAO = collectDAO;
         this.likeDAO = likeDAO;
+        this.followDAO = followDAO;
     }
 
     @Override
@@ -31,7 +34,7 @@ public class VideoListThread implements Callable<List<Video>> {
             int hour = (min / 60) ;
             if (id != null) {
                 Integer is = collectDAO.selectIsCollect(video.getId(), id);
-                Integer isC = collectDAO.selectIsCollect(video.getId(), id);
+                Integer isC = followDAO.selectIsFollow(id);
                 Integer isL = likeDAO.selectIsLike(video.getId(), id);
 
                 if (is == null) {

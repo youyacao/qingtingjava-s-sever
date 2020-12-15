@@ -22,6 +22,7 @@
       <result column="avatar" jdbcType="VARCHAR" property="avatar" />
       <result column="id" jdbcType="INTEGER" property="id" />
       <result column="phone" jdbcType="VARCHAR" property="phone" />
+      <result column="username" jdbcType="VARCHAR" property="username" />
     </association>
   </resultMap>
   <sql id="Base_Column_List">
@@ -54,7 +55,7 @@
   <select id="selectVideoByIdOrMixIdMinId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     SELECT
     v.title,v.view_num,v.like_num,v.thumb,v.video_url,v.created_at,v.user_id,v.id,v.comment_num,
-u.username,v.updated_at,u.nickname,u.avatar,v.category_id,v.share_num,v.collect_num,
+u.username,v.updated_at,u.nickname,u.avatar,v.category_id,v.share_num,v.collect_num,u.username
     FROM video v
     LEFT JOIN users u ON u.id = v.user_id
     WHERE  v.id = #{id,jdbcType=INTEGER}
@@ -62,7 +63,7 @@ u.username,v.updated_at,u.nickname,u.avatar,v.category_id,v.share_num,v.collect_
   <!--关键词查询-->
   <select id="selectVideoAndUsersByKeyWord" resultMap="BaseResultMap">
      SELECT v.title,v.view_num,v.like_num,v.thumb,v.video_url,v.created_at,v.user_id,v.id,
-u.username,v.updated_at,u.nickname,u.avatar,v.category_id,v.comment_num,v.share_num,v.collect_num
+u.username,v.updated_at,u.nickname,u.avatar,v.category_id,v.comment_num,v.share_num,v.collect_num,u.username
 FROM video v
 LEFT JOIN users u ON u.id = v.user_id
 where v.title like CONCAT('%',#{title,jdbcType=VARCHAR},'%')
@@ -70,14 +71,14 @@ ORDER BY v.updated_at DESC limit #{page,jdbcType=INTEGER},#{limit,jdbcType=INTEG
   </select>
   <select id="selectAllVideo" resultMap="BaseResultMap" >
    SELECT  v.title,v.view_num,v.like_num,v.thumb,v.video_url,v.created_at,v.user_id,v.id,
-u.username,v.updated_at,u.nickname,u.avatar,v.category_id,v.comment_num,v.share_num,u.phone,v.collect_num,v.status
+u.username,v.updated_at,u.nickname,u.avatar,v.category_id,v.comment_num,v.share_num,u.phone,v.collect_num,v.status,u.username
 FROM video v
 LEFT JOIN users u ON u.id = v.user_id
   </select>
   <!--获取最新视频-->
   <select id="selectNewestVideo" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     SELECT v.title,v.view_num,v.like_num,v.thumb,v.video_url,v.created_at,v.user_id,v.id,
-u.username,v.updated_at,u.nickname,u.avatar,v.category_id,v.comment_num,v.share_num,v.collect_num
+u.username,v.updated_at,u.nickname,u.avatar,v.category_id,v.comment_num,v.share_num,v.collect_num,u.username
 FROM video v
 LEFT JOIN users u ON u.id = v.user_id
 order by v.updated_at DESC limit #{page,jdbcType=INTEGER},#{limit,jdbcType=INTEGER}
@@ -88,7 +89,7 @@ order by v.updated_at DESC limit #{page,jdbcType=INTEGER},#{limit,jdbcType=INTEG
   </select>
   <select id="selectVideoInfoById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     SELECT v.title,v.view_num,v.like_num,v.thumb,v.video_url,v.created_at,v.user_id,v.id,
-u.username,v.updated_at,u.nickname,u.avatar,v.category_id,v.comment_num,v.share_num,v.collect_num
+u.username,v.updated_at,u.nickname,u.avatar,v.category_id,v.comment_num,v.share_num,v.collect_num,u.username
 FROM video v
 LEFT JOIN users u ON u.id = v.user_id
 where  v.id = #{vid,jdbcType=INTEGER}
@@ -96,7 +97,7 @@ where  v.id = #{vid,jdbcType=INTEGER}
   <!--根据分类获取视频-->
   <select id="selectVideoByCategoryId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     SELECT v.title,v.view_num,v.like_num,v.thumb,v.video_url,v.created_at,v.user_id,v.id,
-u.username,v.updated_at,u.nickname,u.avatar,v.category_id,v.comment_num,v.share_num,v.collect_num
+u.username,v.updated_at,u.nickname,u.avatar,v.category_id,v.comment_num,v.share_num,v.collect_num,u.username
 FROM video v
 LEFT JOIN users u ON u.id = v.user_id
 where category_id = #{CategoryId,jdbcType=INTEGER}
@@ -109,7 +110,7 @@ ORDER BY v.updated_at DESC limit #{page,jdbcType=INTEGER},#{limit,jdbcType=INTEG
   <!--我的作品-->
   <select id="selectMyVideo" parameterType="java.lang.Integer" resultMap="BaseResultMap">
  SELECT v.title,v.view_num,v.like_num,v.thumb,v.video_url,v.created_at,v.user_id,v.id,
-u.username,u.nickname,u.avatar,v.comment_num,v.share_num,v.collect_num
+u.username,u.nickname,u.avatar,v.comment_num,v.share_num,v.collect_num,u.username
 FROM video v
 LEFT JOIN users u ON u.id = v.user_id
 where u.id = #{id,jdbcType=INTEGER}

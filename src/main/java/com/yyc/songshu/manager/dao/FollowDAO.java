@@ -26,6 +26,8 @@ public interface FollowDAO {
 
     Integer selectMyFollowCount(int id);
 
+    Integer selectIsFollow(int id);
+
     Integer selectMyFansCount(int id);
 
 }

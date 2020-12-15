@@ -28,4 +28,14 @@ public class FollowController {
     public String selectMyFans(@RequestBody String data){
         return followServcie.myFans(data);
     }
+
+    @RequestMapping(method = RequestMethod.POST,value = "/addFollow")
+    public String addFollow(@RequestBody String data){
+        return followServcie.addFollow(data);
+    }
+    @RequestMapping(method = RequestMethod.POST,value = "/offFollow")
+    public String offFollow(@RequestBody String data){
+        return followServcie.offFollow(data);
+    }
+
 }

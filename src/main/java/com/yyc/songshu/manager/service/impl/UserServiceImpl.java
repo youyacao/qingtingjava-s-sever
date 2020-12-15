@@ -157,9 +157,13 @@ public class UserServiceImpl implements UserService {
         try {
             Gson g = new Gson();
             Users users = g.fromJson(userData, Users.class);
+
             String token = request.getHeader("token");
             if (token==null||token.length()==0){
                 return JsonUtil.jsonRe(null, JsonResultUtil.ok("100", "请先登入"));
+            }
+            if (users==null){
+                users = new Users();
             }
             users.setApiToken(token);
             if (file==null){
@@ -174,7 +178,7 @@ public class UserServiceImpl implements UserService {
             }
             return JsonUtil.jsonRe(null, JsonResultUtil.ok("400", "修改失败"));
         }catch (Exception e){
-            logger.error(e+":修改用户信息");
+            logger.error("修改用户信息",e);
             return JsonUtil.jsonRe(null, JsonResultUtil.ok("400", "请求错误"));
         }
     }

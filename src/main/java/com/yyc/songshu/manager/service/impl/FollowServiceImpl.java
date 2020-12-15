@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.List;
 
 
@@ -63,6 +64,61 @@ private FollowDAO followDAO;
         }catch (Exception e){
             logger.error(e+":我的粉丝");
             return JsonUtil.jsonRe(null, JsonResultUtil.error("400", "请求错误"));
+        }
+    }
+
+    @Override
+    public String addFollow(String data) {
+        try {
+            String token = request.getHeader("token");
+            if (token == null || token.length() == 0) {
+                return JsonUtil.jsonRe(null, JsonResultUtil.ok("100", "请先登入"));
+            }
+            int uId = usersDAO.selectUserIdByToken(token);
+            if (uId == 0) {
+                return JsonUtil.jsonRe(null, JsonResultUtil.ok("100", "请先登入"));
+            }
+            String userId = JsonUtil.dataValue(data, "userId");
+            Follow follow = new Follow();
+            follow.setFollowId(Integer.valueOf(userId));
+            follow.setUserId(uId);
+            follow.setStatus(1);
+            follow.setCreatedAt(Integer.valueOf(String.valueOf(new Date().getTime()).substring(0, 10)));
+            follow.setUpdatedAt(Integer.valueOf(String.valueOf(new Date().getTime()).substring(0, 10)));
+            int saveInt = followDAO.insertSelective(follow);
+            if (saveInt > 0) {
+                return JsonUtil.jsonRe(null, JsonResultUtil.ok("200", "成功"));
+            }
+            return JsonUtil.jsonRe(null, JsonResultUtil.ok("400", "关注失败，请重新尝试"));
+        }catch (Exception e){
+            return JsonUtil.jsonRe(null, JsonResultUtil.ok("400", "关注失败，对方不存在"));
+        }
+    }
+
+    @Override
+    public String offFollow(String data) {
+        try {
+            String token = request.getHeader("token");
+            if (token == null || token.length() == 0) {
+                return JsonUtil.jsonRe(null, JsonResultUtil.ok("100", "请先登入"));
+            }
+            int uId = usersDAO.selectUserIdByToken(token);
+            if (uId == 0) {
+                return JsonUtil.jsonRe(null, JsonResultUtil.ok("100", "请先登入"));
+            }
+            String userId = JsonUtil.dataValue(data, "userId");
+            Follow follow = new Follow();
+            follow.setFollowId(Integer.valueOf(userId));
+            follow.setUserId(uId);
+            follow.setStatus(0);
+            follow.setUpdatedAt(Integer.valueOf(String.valueOf(new Date().getTime()).substring(0, 10)));
+            int saveInt = followDAO.updateByPrimaryKeySelective(follow);
+            if (saveInt > 0) {
+                return JsonUtil.jsonRe(null, JsonResultUtil.ok("200", "成功"));
+            }
+            return JsonUtil.jsonRe(null, JsonResultUtil.ok("400", "取消关注失败，请重新尝试"));
+        }catch (Exception e){
+            return JsonUtil.jsonRe(null, JsonResultUtil.ok("400", "取消关注失败，对方不存在"));
         }
     }
 }

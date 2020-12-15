@@ -58,6 +58,9 @@ public class VideoServiceImpl implements VideoService {
     @Autowired
     private UploadManager uploadManager;
 
+    @Autowired
+    private FollowDAO followDAO;
+
     private StringMap putPolicy;
 
     private final static ExecutorService executorService = Executors.newCachedThreadPool();
@@ -282,7 +285,7 @@ public class VideoServiceImpl implements VideoService {
 
     private synchronized List<Video> videosList (List<Video> videos,Integer id) throws Exception{
         CompletionService<List<Video>> completionService = new ExecutorCompletionService<List<Video>>(executorService);
-        completionService.submit(new VideoListThread(videos,id,collectDAO,likeDAO));
+        completionService.submit(new VideoListThread(videos,id,collectDAO,likeDAO,followDAO));
         List<Video> videoList = completionService.take().get();
         System.out.println(":----:"+videoList);
         return videoList;

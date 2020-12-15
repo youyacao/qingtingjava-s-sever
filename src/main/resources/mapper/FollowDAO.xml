@@ -5,7 +5,7 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="follow_id" jdbcType="INTEGER" property="followId" />
-    <result column="status" jdbcType="BIT" property="status" />
+    <result column="status" jdbcType="INTEGER" property="status" />
     <result column="updated_at" jdbcType="INTEGER" property="updatedAt" />
     <result column="created_at" jdbcType="INTEGER" property="createdAt" />
     <association property="users" javaType="com.yyc.songshu.manager.pojo.Users">
@@ -21,20 +21,27 @@
   <!--我的关注-->
   <select id="selectMyFollow" parameterType="java.lang.Integer" resultMap="BaseResultMap">
      SELECT f.id,u.username,u.nickname,u.avatar FROM follow f
-LEFT JOIN users u ON f.user_id=u.id where u.id= #{id,jdbcType=INTEGER}  limit #{page,jdbcType=INTEGER},#{limit,jdbcType=INTEGER}
+LEFT JOIN users u ON f.user_id=u.id where u.id= #{id,jdbcType=INTEGER} and f.status=1 limit #{page,jdbcType=INTEGER},#{limit,jdbcType=INTEGER}
   </select>
   <select id="selectMyFollowCount" parameterType="java.lang.Integer" resultType="java.lang.Integer">
      SELECT count(*) FROM follow f
-LEFT JOIN users u ON f.user_id=u.id where u.id= #{id,jdbcType=INTEGER}
+LEFT JOIN users u ON f.user_id=u.id where u.id= #{id,jdbcType=INTEGER} and  f.status=1
+  </select>
+  <select id="selectIsFollow" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+SELECT 1 FROM follow f
+LEFT JOIN video v ON f.user_id = v.user_id
+WHERE v.user_id = #{id,jdbcType=INTEGER}
+       and f.status = 1
+       limit 1
   </select>
   <!--我的粉丝-->
   <select id="selectMyFans" parameterType="java.lang.Integer" resultMap="BaseResultMap">
 SELECT f.id,u.username,u.nickname,u.avatar FROM follow f
-LEFT JOIN users u ON f.follow_id=u.id where u.id=#{id,jdbcType=INTEGER}  limit #{page,jdbcType=INTEGER},#{limit,jdbcType=INTEGER}
+LEFT JOIN users u ON f.follow_id=u.id where u.id=#{id,jdbcType=INTEGER} and f.status=1  limit #{page,jdbcType=INTEGER},#{limit,jdbcType=INTEGER}
   </select>
   <select id="selectMyFansCount" parameterType="java.lang.Integer" resultType="java.lang.Integer">
      SELECT count(*) FROM follow f
-LEFT JOIN users u ON  f.follow_id=u.id where u.id= #{id,jdbcType=INTEGER}
+LEFT JOIN users u ON  f.follow_id=u.id where u.id= #{id,jdbcType=INTEGER} and  f.status=1
   </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -51,7 +58,7 @@ LEFT JOIN users u ON  f.follow_id=u.id where u.id= #{id,jdbcType=INTEGER}
       status, updated_at, created_at
       )
     values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{followId,jdbcType=INTEGER}, 
-      #{status,jdbcType=BIT}, #{updatedAt,jdbcType=INTEGER}, #{createdAt,jdbcType=INTEGER}
+      #{status,jdbcType=INTEGER}, #{updatedAt,jdbcType=INTEGER}, #{createdAt,jdbcType=INTEGER}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.yyc.songshu.manager.pojo.Follow">
@@ -87,7 +94,7 @@ LEFT JOIN users u ON  f.follow_id=u.id where u.id= #{id,jdbcType=INTEGER}
         #{followId,jdbcType=INTEGER},
       </if>
       <if test="status != null">
-        #{status,jdbcType=BIT},
+        #{status,jdbcType=INTEGER},
       </if>
       <if test="updatedAt != null">
         #{updatedAt,jdbcType=INTEGER},
@@ -107,7 +114,7 @@ LEFT JOIN users u ON  f.follow_id=u.id where u.id= #{id,jdbcType=INTEGER}
         follow_id = #{followId,jdbcType=INTEGER},
       </if>
       <if test="status != null">
-        status = #{status,jdbcType=BIT},
+        status = #{status,jdbcType=INTEGER},
       </if>
       <if test="updatedAt != null">
         updated_at = #{updatedAt,jdbcType=INTEGER},
@@ -122,7 +129,7 @@ LEFT JOIN users u ON  f.follow_id=u.id where u.id= #{id,jdbcType=INTEGER}
     update follow
     set user_id = #{userId,jdbcType=INTEGER},
       follow_id = #{followId,jdbcType=INTEGER},
-      status = #{status,jdbcType=BIT},
+      status = #{status,jdbcType=INTEGER},
       updated_at = #{updatedAt,jdbcType=INTEGER},
       created_at = #{createdAt,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}

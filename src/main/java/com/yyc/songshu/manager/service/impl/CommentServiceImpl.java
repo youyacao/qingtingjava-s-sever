@@ -10,6 +10,7 @@ import com.yyc.songshu.manager.dao.UsersDAO;
 import com.yyc.songshu.manager.dao.VideoDAO;
 import com.yyc.songshu.manager.pojo.Comment;
 import com.yyc.songshu.manager.pojo.CommentLike;
+import com.yyc.songshu.manager.pojo.Video;
 import com.yyc.songshu.manager.service.CommentService;
 import com.yyc.songshu.manager.util.JsonResultUtil;
 import com.yyc.songshu.manager.util.JsonUtil;
@@ -127,10 +128,7 @@ public class CommentServiceImpl implements CommentService {
             String page = JsonUtil.dataValue(data, "page");
             String limit = JsonUtil.dataValue(data, "limit");
             String pid = JsonUtil.dataValue(data, "pid");
-            int count = commentDAO.selectChildCommentCount(Integer.parseInt(pid));
-            int totalPage = count / Integer.valueOf(limit);
-            int pageNum = (Integer.parseInt(page)-1) * Integer.valueOf(limit);
-            List<Comment> comments = commentDAO.selectChildComment(Integer.parseInt(pid), Integer.parseInt(limit), pageNum);
+            PageHelper.startPage(Integer.valueOf(Objects.requireNonNull(page)),Integer.valueOf(Objects.requireNonNull(limit)));
             JSONObject jsonObject = new JSONObject();
             Integer uId = null;
             String token = request.getHeader("token");
@@ -144,12 +142,19 @@ public class CommentServiceImpl implements CommentService {
 
                 }
             }
-            jsonObject.put("list", commentList(comments,commentDAO,uId));
-            jsonObject.put("commentNum", count);
-            jsonObject.put("page", page);
-            jsonObject.put("limit", limit);
-            jsonObject.put("total", count);
-            jsonObject.put("totalPage", totalPage);
+            List<Comment> comments = commentDAO.selectChildComment(Integer.parseInt(pid));
+            for (Comment comment:comments){
+                List<Comment> commentList = commentDAO.selectChild(comment.getId());
+                comment.setReply_user(commentList);
+                Integer is = commentDAO.selectIsRe(comment.getId());
+                if (is == null) {
+                    comment.setIs_reply("0");
+                } else {
+                    comment.setIs_reply("1");
+                }
+            }
+            PageInfo<Comment> usersPageInfo = new PageInfo<>(commentList(comments,commentDAO,uId));
+            jsonObject.put("list", usersPageInfo);
             return JsonUtil.jsonRe(jsonObject, JsonResultUtil.error("200", "成功"));
         }catch (Exception e){
             logger.error("子评论：",e);
