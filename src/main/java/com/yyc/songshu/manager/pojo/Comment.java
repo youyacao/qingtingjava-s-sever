@@ -39,6 +39,16 @@ public class Comment {
 
     private String is_reply;
 
+    private Comment byChildComment;
+
+    public Comment getByChildComment() {
+        return byChildComment;
+    }
+
+    public void setByChildComment(Comment byChildComment) {
+        this.byChildComment = byChildComment;
+    }
+
     public List<Comment> getReply_user() {
         return reply_user;
     }

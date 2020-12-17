@@ -24,6 +24,8 @@ public interface CommentDAO {
 
     int selectCommentCount(int vid);
 
+    Comment selectCommentByChild(int vid);
+
     List<Comment> selectChildComment(@Param("pid")int pid);
 
     List<Comment>  selectChild (int id);

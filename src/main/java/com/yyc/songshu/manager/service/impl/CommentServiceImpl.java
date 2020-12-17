@@ -152,6 +152,9 @@ public class CommentServiceImpl implements CommentService {
                 } else {
                     comment.setIs_reply("1");
                 }
+                if (comment.getCommentId()!=0){
+                    comment.setByChildComment(commentDAO.selectCommentByChild(comment.getCommentId()));
+                }
             }
             PageInfo<Comment> usersPageInfo = new PageInfo<>(commentList(comments,commentDAO,uId));
             jsonObject.put("list", usersPageInfo);
