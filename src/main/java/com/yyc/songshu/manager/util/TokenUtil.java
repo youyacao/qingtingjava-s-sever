@@ -1,5 +1,7 @@
 package com.yyc.songshu.manager.util;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,6 +24,25 @@ public class TokenUtil {
         return strToHex(encodedString(str, ENCODED_PASSWORD));
     }
 
+    public static String MD(String str) {//项目中的
+        try {
+            MessageDigest md5 = MessageDigest.getInstance("MD5");
+            md5.update(str.getBytes());
+            byte[] b = md5.digest();
+
+            StringBuilder sb = new StringBuilder("");
+            for (int value : b) {
+                int i = value;
+                if (i < 0) i += 256;
+                if (i < 16) sb.append("0");
+                sb.append(Integer.toHexString(i));
+            }
+            return sb.toString();  //32位加密
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
     /**
      * 转换
      * @param str

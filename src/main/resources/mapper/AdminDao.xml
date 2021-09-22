@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yyc.songshu.manager.dao.AdminDao">
+  <resultMap id="BaseResultMap" type="com.yyc.songshu.manager.pojo.Admin">
+    <id column="admin_id" jdbcType="INTEGER" property="adminId" />
+    <result column="admin_name" jdbcType="VARCHAR" property="adminName" />
+    <result column="admin_token" jdbcType="VARCHAR" property="adminToken" />
+    <result column="admin_password" jdbcType="VARCHAR" property="adminPassword" />
+    <result column="admin_account" jdbcType="VARCHAR" property="adminAccount" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+    <result column="update_by" jdbcType="TIMESTAMP" property="updateBy" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    admin_id, admin_name, admin_token, admin_password, admin_account, create_by, update_by, 
+    create_time, update_time, status
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from admin
+    where admin_id = #{adminId,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectByAccount" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from admin
+    where admin_account = #{account,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectAllAdmin" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from admin
+  </select>
+
+  <select id="selectByToken" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from admin
+    where admin_token = #{token,jdbcType=VARCHAR}
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from admin
+    where admin_id = #{adminId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yyc.songshu.manager.pojo.Admin">
+    insert into admin (admin_id, admin_name, admin_token, 
+      admin_password, admin_account, create_by, 
+      update_by, create_time, update_time, 
+      status)
+    values (#{adminId,jdbcType=INTEGER}, #{adminName,jdbcType=VARCHAR}, #{adminToken,jdbcType=VARCHAR}, 
+      #{adminPassword,jdbcType=VARCHAR}, #{adminAccount,jdbcType=VARCHAR}, #{createBy,jdbcType=VARCHAR}, 
+      #{updateBy,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{status,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yyc.songshu.manager.pojo.Admin">
+    insert into admin
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="adminId != null">
+        admin_id,
+      </if>
+      <if test="adminName != null">
+        admin_name,
+      </if>
+      <if test="adminToken != null">
+        admin_token,
+      </if>
+      <if test="adminPassword != null">
+        admin_password,
+      </if>
+      <if test="adminAccount != null">
+        admin_account,
+      </if>
+      <if test="createBy != null">
+        create_by,
+      </if>
+      <if test="updateBy != null">
+        update_by,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="adminId != null">
+        #{adminId,jdbcType=INTEGER},
+      </if>
+      <if test="adminName != null">
+        #{adminName,jdbcType=VARCHAR},
+      </if>
+      <if test="adminToken != null">
+        #{adminToken,jdbcType=VARCHAR},
+      </if>
+      <if test="adminPassword != null">
+        #{adminPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="adminAccount != null">
+        #{adminAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null">
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateBy != null">
+        #{updateBy,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yyc.songshu.manager.pojo.Admin">
+    update admin
+    <set>
+      <if test="adminName != null">
+        admin_name = #{adminName,jdbcType=VARCHAR},
+      </if>
+      <if test="adminToken != null">
+        admin_token = #{adminToken,jdbcType=VARCHAR},
+      </if>
+      <if test="adminPassword != null">
+        admin_password = #{adminPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="adminAccount != null">
+        admin_account = #{adminAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null">
+        create_by = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateBy != null">
+        update_by = #{updateBy,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+    </set>
+    where admin_id = #{adminId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yyc.songshu.manager.pojo.Admin">
+    update admin
+    set admin_name = #{adminName,jdbcType=VARCHAR},
+      admin_token = #{adminToken,jdbcType=VARCHAR},
+      admin_password = #{adminPassword,jdbcType=VARCHAR},
+      admin_account = #{adminAccount,jdbcType=VARCHAR},
+      create_by = #{createBy,jdbcType=VARCHAR},
+      update_by = #{updateBy,jdbcType=TIMESTAMP},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=INTEGER}
+    where admin_id = #{adminId,jdbcType=INTEGER}
+  </update>
+</mapper>

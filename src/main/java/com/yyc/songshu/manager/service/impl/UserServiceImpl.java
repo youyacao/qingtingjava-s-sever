@@ -8,10 +8,8 @@ import com.google.gson.Gson;
 import com.qiniu.storage.UploadManager;
 import com.qiniu.util.Auth;
 import com.qiniu.util.StringMap;
-import com.yyc.songshu.manager.dao.FollowDAO;
-import com.yyc.songshu.manager.dao.LikeDAO;
-import com.yyc.songshu.manager.dao.SmsDAO;
-import com.yyc.songshu.manager.dao.UsersDAO;
+import com.yyc.songshu.manager.dao.*;
+import com.yyc.songshu.manager.pojo.Admin;
 import com.yyc.songshu.manager.pojo.Users;
 import com.yyc.songshu.manager.service.UserService;
 import com.yyc.songshu.manager.util.*;
@@ -49,6 +47,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private LikeDAO likeDAO;
+
+    @Autowired
+    private AdminDao adminDao;
 
     private StringMap putPolicy;
     @Override
@@ -192,6 +193,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public String getAllAdmin(int limit, int page) {
+        PageHelper.startPage(limit,page);
+        List<Admin> admins = adminDao.selectAllAdmin();
+        PageInfo<Admin> adminPageInfo = new PageInfo<>(admins);
+        return JsonUtil.jsonRe(adminPageInfo, JsonResultUtil.ok("200", "成功"));
+    }
+
+    @Override
     public String updateUser(Users users) {
         int updateInt  = usersDAO.updateByPrimaryKeySelective(users);
         if (updateInt>0){
@@ -217,22 +226,55 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public String getAdminToken(String token) {
+        Admin admin = adminDao.selectByToken(token);
+        if (admin==null){
+            return JsonUtil.jsonRe(null, JsonResultUtil.ok("400", "TOKEN错误"));
+        }
+        return JsonUtil.jsonRe(null, JsonResultUtil.ok("200", "成功"));
+    }
+
+    @Override
     public String login(String data) {
         String username = JsonUtil.dataValue(data,"username");
         String password = JsonUtil.dataValue(data,"password");
-        String token = "ssssssssssssssssssssssssssssssa";
-        assert username != null;
-        if (username.equals("admin")){
-            assert password != null;
-            if (password.equals("admin")){
-                return JsonUtil.jsonRe(token, JsonResultUtil.ok("0", "成功"));
-            }else {
-                return JsonUtil.jsonRe(null, JsonResultUtil.ok("400", "密码错误"));
-            }
-        }else {
-            return JsonUtil.jsonRe(null, JsonResultUtil.ok("400", "账号错误"));
+        if (username==null||password==null){
+            return JsonUtil.jsonRe(null, JsonResultUtil.ok("400", "账号或密码为空"));
         }
+        Admin admin = adminDao.selectByAccount(username);
+        if (admin==null){
+            return JsonUtil.jsonRe(null, JsonResultUtil.ok("400", "账户不存在"));
+        }
+        if (admin.getAdminPassword().equals(TokenUtil.MD(password))){
+            return JsonUtil.jsonRe(admin.getAdminToken(), JsonResultUtil.ok("0", "成功"));
+        }else {
+            return JsonUtil.jsonRe(null, JsonResultUtil.ok("400", "密码错误"));
+        }
+
     }
-    //基本配置（-短信配置-储存配置-关于我们），视频管理（分类管理，视频列表），用户列表，频道管理，侵权申述，评论管理
+
+    @Override
+    public String addAdminAccount(String data) {
+        String username = JsonUtil.dataValue(data,"username");
+        String password = JsonUtil.dataValue(data,"password");
+        String account = JsonUtil.dataValue(data,"account");
+        if (username==null||password==null||account==null){
+            return JsonUtil.jsonRe(null, JsonResultUtil.ok("400", "必填信息不能为空"));
+        }
+        Admin admin = adminDao.selectByAccount(account);
+        if (admin!=null){
+            return JsonUtil.jsonRe(null, JsonResultUtil.ok("400", "该账户已存在"));
+        }
+        Admin adminInsert  = new Admin();
+        adminInsert.setAdminAccount(account);
+        adminInsert.setAdminName(username);
+        adminInsert.setAdminPassword(TokenUtil.MD(password));
+        adminInsert.setAdminToken(TokenUtil.getToken(account));
+        int saveInt = adminDao.insertSelective(adminInsert);
+        if (saveInt>0){
+            return JsonUtil.jsonRe(null, JsonResultUtil.ok("0", "成功"));
+        }
+        return JsonUtil.jsonRe(null, JsonResultUtil.ok("400", "系统错误"));
+    }
 
 }

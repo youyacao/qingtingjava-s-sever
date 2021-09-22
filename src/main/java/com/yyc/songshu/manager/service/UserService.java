@@ -15,11 +15,17 @@ public interface UserService {
 
     String getAllUser(int limit,int page);
 
+    String getAllAdmin(int limit,int page);
+
     String updateUser(Users users);
 
     String deleteUser(int uId);
 
     String getAdminUserInfo(int uId);
 
+    String getAdminToken(String token);
+
     String login(String data);
+
+    String addAdminAccount(String data);
 }

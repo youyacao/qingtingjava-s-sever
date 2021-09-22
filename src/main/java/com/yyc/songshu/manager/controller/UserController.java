@@ -72,9 +72,17 @@ public class UserController {
     }
     @RequestMapping(method = RequestMethod.GET,value = "/user")
     public String info(@RequestParam(value = "uId")int uId){
-        System.out.println();
-        //System.out.println(s);
         return userService.getAdminUserInfo(uId);
+    }
+
+    @RequestMapping(method = RequestMethod.GET,value = "/indexToken")
+    public String indexToken(@RequestParam(value = "token")String token){
+        return userService.getAdminToken(token);
+    }
+
+    @RequestMapping(method = RequestMethod.GET,value = "/getAllAdmin")
+    public String getAllAdmin(@RequestParam(value = "limit")int limit,@RequestParam(value = "page")int page){
+        return userService.getAllAdmin(limit,page);
     }
 
 }

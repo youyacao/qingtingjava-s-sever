@@ -8,8 +8,8 @@
             <property name="suppressAllComments" value="true" />
         </commentGenerator>
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://122.114.86.158:3306/songshu"
-                        userId="root" password="password">
+                        connectionURL="jdbc:mysql://122.114.79.134:3306/songshu"
+                        userId="EvanLove.Sw" password="EvanLove.Sw">
         </jdbcConnection>
         <!--存放生成实体类的路径-->
         <javaModelGenerator targetPackage="com.yyc.songshu.manager.pojo" targetProject="src/main/java"/>
@@ -234,7 +234,13 @@
                enableSelectByExample="false"
                enableCountByExample="false"
                selectByExampleQueryId="false"></table>-->
-        <table tableName="app_content" mapperName="AppContentDao" domainObjectName="AppContent"
+       <!-- <table tableName="app_content" mapperName="AppContentDao" domainObjectName="AppContent"
+               enableDeleteByExample="false"
+               enableUpdateByExample="false"
+               enableSelectByExample="false"
+               enableCountByExample="false"
+               selectByExampleQueryId="false"></table>-->
+        <table tableName="admin" mapperName="AdminDao" domainObjectName="Admin"
                enableDeleteByExample="false"
                enableUpdateByExample="false"
                enableSelectByExample="false"
