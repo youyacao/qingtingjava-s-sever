@@ -254,10 +254,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String addAdminAccount(String data) {
-        String username = JsonUtil.dataValue(data,"username");
-        String password = JsonUtil.dataValue(data,"password");
-        String account = JsonUtil.dataValue(data,"account");
+    public String addAdminAccount(Admin data) {
+        String username = data.getAdminName();
+        String password = data.getAdminPassword();
+        String account = data.getAdminAccount();
         if (username==null||password==null||account==null){
             return JsonUtil.jsonRe(null, JsonResultUtil.ok("400", "必填信息不能为空"));
         }

@@ -1,5 +1,6 @@
 package com.yyc.songshu.manager.service;
 
+import com.yyc.songshu.manager.pojo.Admin;
 import com.yyc.songshu.manager.pojo.Users;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,5 +28,5 @@ public interface UserService {
 
     String login(String data);
 
-    String addAdminAccount(String data);
+    String addAdminAccount(Admin data);
 }

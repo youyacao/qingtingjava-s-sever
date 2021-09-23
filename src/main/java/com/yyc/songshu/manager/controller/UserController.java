@@ -1,5 +1,6 @@
 package com.yyc.songshu.manager.controller;
 
+import com.yyc.songshu.manager.pojo.Admin;
 import com.yyc.songshu.manager.pojo.Users;
 import com.yyc.songshu.manager.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,6 +84,11 @@ public class UserController {
     @RequestMapping(method = RequestMethod.GET,value = "/getAllAdmin")
     public String getAllAdmin(@RequestParam(value = "limit")int limit,@RequestParam(value = "page")int page){
         return userService.getAllAdmin(limit,page);
+    }
+
+    @RequestMapping(method = RequestMethod.POST,value = "/addAdmin")
+    public String addAdmin(@RequestBody Admin admin){
+        return userService.addAdminAccount(admin);
     }
 
 }
